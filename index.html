@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Cielo 髪のカルテ | 池袋西口</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf8f5;
+  --white: #ffffff;
+  --orange: #EB601B;
+  --orange-light: #EBA270;
+  --orange-pale: #fdf0e8;
+  --orange-glow: rgba(235,96,27,0.12);
+  --text: #1a1410;
+  --text-muted: #9e8d7e;
+  --border: #e8ddd4;
+  --gold: #c9a84c;
+  --gold-pale: #fdf8ec;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+.app {
+  width: 100%; max-width: 430px;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  background: var(--bg);
+}
+.screen {
+  display: none; flex-direction: column;
+  min-height: 100vh;
+  animation: fadeUp 0.38s ease;
+}
+.screen.active { display: flex; }
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes pulse {
+  0%,100% { transform:scale(1); }
+  50%      { transform:scale(1.06); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+@keyframes popIn {
+  0%   { opacity:0; transform:scale(0.85) translateY(6px); }
+  100% { opacity:1; transform:scale(1) translateY(0); }
+}
+
+/* ── BRAND BAR ── */
+.brand-bar {
+  display:flex; align-items:center; justify-content:center;
+  padding:16px 24px 13px;
+  border-bottom:1px solid var(--border);
+  gap:10px; background:white;
+  position:relative;
+}
+.brand-mark {
+  width:28px; height:28px;
+  background:var(--orange); border-radius:50%;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.brand-mark svg { width:14px; height:14px; fill:white; }
+.brand-name {
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px; font-weight:400; letter-spacing:0.14em;
+}
+.brand-loc { font-size:8.5px; letter-spacing:0.18em; color:var(--text-muted); margin-top:2px; }
+
+/* ── START SCREEN ── */
+.hero {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; padding:36px 26px 28px;
+  position:relative; overflow:hidden;
+}
+.hero-orb1 {
+  position:absolute; top:-60px; right:-80px;
+  width:240px; height:240px; border-radius:50%;
+  background:radial-gradient(circle, var(--orange-pale) 0%, transparent 70%);
+  z-index:0; pointer-events:none;
+}
+.hero-orb2 {
+  position:absolute; bottom:60px; left:-80px;
+  width:200px; height:200px; border-radius:50%;
+  background:radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
+  z-index:0; pointer-events:none;
+}
+.hero-icon {
+  position:relative; z-index:1;
+  width:82px; height:82px; background:white; border-radius:50%;
+  box-shadow:0 6px 32px rgba(235,96,27,0.18), 0 0 0 8px rgba(235,96,27,0.06);
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:22px;
+  animation:pulse 3s ease-in-out infinite;
+}
+.hero-eyebrow {
+  position:relative; z-index:1;
+  font-size:9.5px; letter-spacing:0.32em; color:var(--orange);
+  text-transform:uppercase; margin-bottom:10px;
+}
+.hero-title {
+  position:relative; z-index:1;
+  font-family:'Cormorant Garamond',serif;
+  font-size:29px; font-weight:300; letter-spacing:0.04em;
+  text-align:center; line-height:1.45; margin-bottom:12px;
+  color:var(--text);
+}
+.hero-title em {
+  font-style:italic; color:var(--orange);
+}
+.hero-desc {
+  position:relative; z-index:1;
+  font-size:12.5px; color:var(--text-muted);
+  text-align:center; line-height:2; max-width:250px; margin-bottom:28px;
+}
+.hero-sparkline {
+  position:relative; z-index:1;
+  display:flex; align-items:center; gap:6px;
+  font-size:10.5px; color:var(--text-muted);
+  margin-bottom:28px;
+}
+.hero-sparkline span { color:var(--orange); font-weight:500; }
+
+/* mode cards */
+.mode-cards {
+  position:relative; z-index:1;
+  width:100%; display:flex; flex-direction:column; gap:11px; margin-bottom:20px;
+}
+.mode-card {
+  width:100%; background:white;
+  border:2px solid var(--border);
+  border-radius:18px; cursor:pointer;
+  transition:all 0.24s; text-align:left; overflow:hidden;
+  position:relative;
+}
+.mode-card::after {
+  content:''; position:absolute; inset:0; border-radius:16px;
+  background:linear-gradient(135deg, rgba(235,96,27,0) 0%, rgba(235,96,27,0.03) 100%);
+  opacity:0; transition:opacity 0.2s;
+}
+.mode-card:hover { border-color:var(--orange-light); transform:translateY(-2px); box-shadow:0 6px 24px rgba(235,96,27,0.12); }
+.mode-card:hover::after { opacity:1; }
+.mc-inner { display:flex; align-items:center; gap:14px; padding:18px 20px; }
+.mc-ico {
+  width:50px; height:50px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:23px; flex-shrink:0;
+}
+.mc-ico.a { background:var(--orange-pale); }
+.mc-ico.b { background:#edf4ff; }
+.mc-info { flex:1; }
+.mc-ttl { font-size:14px; font-weight:500; margin-bottom:3px; letter-spacing:0.02em; }
+.mc-sub { font-size:11.5px; color:var(--text-muted); line-height:1.65; }
+.mc-arrow {
+  width:30px; height:30px; border-radius:50%;
+  background:var(--orange-pale);
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; color:var(--orange); flex-shrink:0;
+  transition:all 0.2s;
+}
+.mode-card:hover .mc-arrow { background:var(--orange); color:white; }
+.hero-note { position:relative; z-index:1; font-size:10px; color:var(--text-muted); letter-spacing:0.05em; }
+
+/* ── MENU SELECT ── */
+.sel-header {
+  padding:22px 24px 0; background:white; border-bottom:1px solid var(--border);
+}
+.sel-tag { font-size:9.5px; letter-spacing:0.24em; color:var(--orange); text-transform:uppercase; margin-bottom:8px; }
+.sel-title { font-size:18px; font-weight:400; line-height:1.65; padding-bottom:18px; }
+.sel-body {
+  flex:1; padding:14px 20px; display:flex; flex-direction:column;
+  gap:10px; overflow-y:auto; background:var(--bg);
+}
+.msb {
+  width:100%; background:white; border:1.5px solid var(--border);
+  border-radius:14px; cursor:pointer; transition:all 0.22s; text-align:left; overflow:hidden;
+}
+.msb:hover { border-color:var(--orange-light); box-shadow:0 3px 12px rgba(235,96,27,0.08); }
+.msb.sel { border-color:var(--orange); background:var(--orange-pale); box-shadow:0 3px 14px rgba(235,96,27,0.14); }
+.msb-inner { display:flex; align-items:center; gap:12px; padding:14px 16px; }
+.msb-ico {
+  width:40px; height:40px; border-radius:10px; background:var(--orange-pale);
+  display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;
+  transition:transform 0.2s;
+}
+.msb:hover .msb-ico { transform:scale(1.08); }
+.msb.sel .msb-ico { background:rgba(235,96,27,0.15); }
+.msb-lbl { flex:1; font-size:14px; font-weight:400; }
+.msb-chk {
+  width:22px; height:22px; border-radius:50%; border:1.5px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; color:white; transition:all 0.22s; flex-shrink:0; background:white;
+}
+.msb.sel .msb-chk { background:var(--orange); border-color:var(--orange); }
+.sub-sel { border-top:1px solid var(--border); padding:10px 16px 14px; display:none; flex-direction:column; gap:8px; background:rgba(253,240,232,0.4); }
+.sub-sel.open { display:flex; }
+.sub-ttl { font-size:10px; letter-spacing:0.18em; color:var(--orange); text-transform:uppercase; margin-bottom:4px; }
+.sub-opt {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px; border-radius:8px;
+  background:white; border:1.5px solid var(--border);
+  cursor:pointer; font-size:13px; transition:all 0.2s;
+}
+.sub-opt:hover { border-color:var(--orange-light); }
+.sub-opt.sel { border-color:var(--orange); background:var(--orange-pale); color:var(--orange); }
+.sub-dot {
+  width:16px; height:16px; border-radius:50%; border:1.5px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; flex-shrink:0; transition:all 0.2s;
+}
+.sub-opt.sel .sub-dot { background:var(--orange); border-color:var(--orange); color:white; }
+
+/* ── MINI QUIZ ── */
+.mq-prog {
+  padding:18px 24px 0; background:white; border-bottom:1px solid var(--border);
+}
+.mq-dots { display:flex; gap:6px; margin-bottom:12px; }
+.mq-dot { width:28px; height:3px; border-radius:2px; background:var(--border); transition:background 0.3s; }
+.mq-dot.done { background:var(--orange-light); }
+.mq-dot.active { background:var(--orange); }
+.mq-tag { font-size:9px; letter-spacing:0.22em; color:var(--orange); text-transform:uppercase; margin-bottom:6px; }
+.mq-txt { font-size:17px; font-weight:400; line-height:1.65; padding-bottom:18px; }
+.mq-opts { flex:1; padding:14px 20px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; background:var(--bg); }
+
+/* ── QUIZ ── */
+.quiz-top { padding:18px 24px 0; background:white; border-bottom:1px solid var(--border); }
+.prog-row { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+.step-dots { display:flex; gap:4px; flex:1; }
+.step-dot { height:3px; flex:1; background:var(--border); border-radius:2px; transition:background 0.3s; }
+.step-dot.done { background:var(--orange-light); }
+.step-dot.active { background:var(--orange); }
+.step-cnt { font-family:'Cormorant Garamond',serif; font-size:13px; color:var(--text-muted); white-space:nowrap; }
+.q-mode { font-size:9px; letter-spacing:0.22em; color:var(--orange); text-transform:uppercase; margin-bottom:5px; }
+.q-cat { font-size:10px; letter-spacing:0.18em; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px; }
+.q-txt { font-size:17px; font-weight:400; line-height:1.65; padding-bottom:18px; }
+.quiz-opts { flex:1; padding:14px 20px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; background:var(--bg); }
+.opt-btn {
+  width:100%; padding:14px 16px; background:white; border:1.5px solid var(--border);
+  color:var(--text); font-family:'Noto Sans JP',sans-serif; font-size:13.5px;
+  font-weight:300; text-align:left; cursor:pointer; border-radius:12px;
+  transition:all 0.22s; line-height:1.6; display:flex; align-items:center; gap:12px;
+  position:relative; overflow:hidden;
+}
+.opt-btn::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(90deg, transparent, rgba(235,96,27,0.04), transparent);
+  transform:translateX(-100%); transition:transform 0.4s;
+}
+.opt-btn:hover { border-color:var(--orange-light); background:var(--orange-pale); transform:translateX(2px); }
+.opt-btn:hover::before { transform:translateX(100%); }
+.opt-btn.sel { border-color:var(--orange); background:var(--orange-pale); color:var(--orange); transform:translateX(0); }
+.opt-circle {
+  width:22px; height:22px; border:1.5px solid var(--border); border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; transition:all 0.22s; background:white;
+}
+.opt-btn.sel .opt-circle { background:var(--orange); border-color:var(--orange); color:white; }
+
+/* ── NAV ── */
+.nav-row {
+  padding:14px 20px 32px; display:flex; gap:10px;
+  background:white; border-top:1px solid var(--border);
+}
+.btn-back {
+  padding:13px 18px; background:white; border:1.5px solid var(--border);
+  color:var(--text-muted); font-size:13px; cursor:pointer; border-radius:50px; transition:all 0.2s;
+}
+.btn-back:hover { border-color:#ccc; color:var(--text); }
+.btn-next {
+  flex:1; padding:13px; background:var(--border); border:none;
+  color:#c0b5ab; font-family:'Noto Sans JP',sans-serif; font-size:14px;
+  font-weight:500; cursor:default; border-radius:50px; transition:all 0.26s; letter-spacing:0.04em;
+}
+.btn-next.on {
+  background:var(--orange); color:white; cursor:pointer;
+  box-shadow:0 4px 18px rgba(235,96,27,0.3);
+}
+.btn-next.on:hover { background:#d4541a; transform:translateY(-1px); box-shadow:0 6px 22px rgba(235,96,27,0.38); }
+
+/* ── LOADING ── */
+.load-screen {
+  align-items:center; justify-content:center; gap:24px; background:var(--bg);
+  flex-direction:column;
+}
+.load-logo {
+  width:64px; height:64px; background:white; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 24px rgba(235,96,27,0.14); position:relative;
+}
+.load-logo::after {
+  content:''; position:absolute; inset:-5px;
+  border:2px solid transparent; border-top-color:var(--orange);
+  border-right-color:rgba(235,96,27,0.3);
+  border-radius:50%; animation:spin 0.9s linear infinite;
+}
+.load-logo svg { width:28px; height:28px; fill:var(--orange); }
+.load-msg {
+  font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:300;
+  letter-spacing:0.1em; color:var(--text);
+}
+.load-sub { font-size:12px; color:var(--text-muted); letter-spacing:0.05em; }
+.load-dots { display:flex; gap:6px; }
+.load-dot {
+  width:6px; height:6px; border-radius:50%; background:var(--orange-light);
+  animation:loadBounce 1.2s ease infinite;
+}
+.load-dot:nth-child(2) { animation-delay:0.2s; }
+.load-dot:nth-child(3) { animation-delay:0.4s; }
+@keyframes loadBounce {
+  0%,80%,100% { transform:scale(0.7); opacity:0.4; }
+  40%          { transform:scale(1.2); opacity:1; }
+}
+
+/* ── RESULT ── */
+.res-hero {
+  padding:32px 26px 26px; text-align:center; color:white;
+  position:relative; overflow:hidden;
+  background:linear-gradient(145deg, #EB601B 0%, #EBA270 60%, #f0b98a 100%);
+}
+.res-hero::before {
+  content:''; position:absolute; top:-50px; right:-60px;
+  width:180px; height:180px;
+  border:1px solid rgba(255,255,255,0.18); border-radius:50%;
+  pointer-events:none;
+}
+.res-hero::after {
+  content:''; position:absolute; bottom:-30px; left:-40px;
+  width:120px; height:120px;
+  border:1px solid rgba(255,255,255,0.1); border-radius:50%;
+  pointer-events:none;
+}
+.r-mode-tag {
+  display:inline-block; font-size:9px; letter-spacing:0.26em; text-transform:uppercase;
+  opacity:0.85; background:rgba(255,255,255,0.22); border-radius:100px;
+  padding:4px 14px; margin-bottom:12px; position:relative; z-index:1;
+  backdrop-filter:blur(4px);
+}
+.r-type {
+  font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:300;
+  letter-spacing:0.04em; margin-bottom:10px; position:relative; z-index:1; line-height:1.3;
+}
+.r-sub {
+  font-size:12.5px; opacity:0.95; line-height:1.9;
+  position:relative; z-index:1; max-width:290px; margin:0 auto;
+}
+/* sparkle emoji on result */
+.r-sparkle {
+  font-size:28px; margin-bottom:10px; position:relative; z-index:1;
+  animation:pulse 2.5s ease-in-out infinite;
+}
+
+.res-body {
+  flex:1; overflow-y:auto; padding:22px 20px;
+  display:flex; flex-direction:column; gap:20px; background:var(--bg);
+}
+.r-ttl {
+  font-size:9.5px; letter-spacing:0.24em; color:var(--orange); text-transform:uppercase;
+  margin-bottom:11px; display:flex; align-items:center; gap:10px;
+}
+.r-ttl::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* traits */
+.traits-wrap { display:flex; flex-wrap:wrap; gap:7px; }
+.trait {
+  padding:5px 13px; background:white; border:1px solid var(--border);
+  border-radius:100px; font-size:12px; color:var(--text-muted);
+  transition:all 0.2s; cursor:default;
+  animation:popIn 0.35s ease both;
+}
+.trait:hover { border-color:var(--orange-light); color:var(--orange); background:var(--orange-pale); }
+
+/* advice */
+.advice-wrap { display:flex; flex-direction:column; gap:8px; }
+.advice-card {
+  padding:13px 16px; background:white; border-radius:12px;
+  border-left:3px solid var(--orange-light);
+  font-size:13px; line-height:1.75; color:var(--text);
+  animation:popIn 0.35s ease both;
+}
+.advice-card.accent { border-left-color:var(--orange); background:var(--orange-pale); }
+
+/* damage */
+.dmg-card {
+  background:white; border:1.5px solid var(--border);
+  border-radius:14px; padding:16px 18px; overflow:hidden; position:relative;
+}
+.dmg-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.dmg-lbl { font-size:13px; font-weight:500; }
+.dmg-badge { font-size:11px; font-weight:500; padding:3px 12px; border-radius:100px; }
+.d1 { background:#e8f5e9; color:#2e7d32; }
+.d2 { background:#fff8e1; color:#f57f17; }
+.d3 { background:#fff3e0; color:#e65100; }
+.d4 { background:#fce4ec; color:#c62828; }
+.dmg-bars { display:flex; gap:5px; margin-bottom:7px; }
+.dmg-seg { flex:1; height:9px; border-radius:5px; background:var(--border); transition:all 0.4s; }
+.s1 { background:linear-gradient(90deg,#81c784,#66bb6a); }
+.s2 { background:linear-gradient(90deg,#ffd54f,#ffca28); }
+.s3 { background:linear-gradient(90deg,var(--orange-light),#e07040); }
+.s4 { background:linear-gradient(90deg,var(--orange-light),var(--orange)); }
+.dmg-scale { display:flex; justify-content:space-between; font-size:9px; color:var(--text-muted); }
+.dmg-desc { margin-top:12px; font-size:12.5px; color:var(--text-muted); line-height:1.8; padding-top:12px; border-top:1px solid var(--border); }
+
+/* menu cards */
+.menu-list { display:flex; flex-direction:column; gap:11px; }
+.menu-item {
+  background:white; border:1.5px solid var(--border);
+  border-radius:14px; overflow:hidden; cursor:pointer;
+  transition:all 0.22s;
+  animation:popIn 0.35s ease both;
+}
+.menu-item:hover { border-color:var(--orange-light); box-shadow:0 3px 14px rgba(235,96,27,0.1); }
+.menu-item.hot { border-color:var(--orange); box-shadow:0 3px 16px rgba(235,96,27,0.14); }
+.menu-head { display:flex; align-items:center; padding:14px 15px; gap:12px; }
+.menu-ico {
+  width:42px; height:42px; border-radius:10px; background:var(--orange-pale);
+  display:flex; align-items:center; justify-content:center; font-size:21px; flex-shrink:0;
+  transition:transform 0.2s;
+}
+.menu-item:hover .menu-ico { transform:scale(1.1) rotate(-3deg); }
+.menu-nm { font-size:13.5px; font-weight:500; margin-bottom:2px; }
+.menu-dc { font-size:11px; color:var(--text-muted); }
+/* "〜を含むメニュー" ribbon */
+.menu-includes {
+  font-size:10px; color:var(--orange); font-weight:500;
+  margin-top:3px; display:flex; align-items:center; gap:4px;
+}
+.menu-includes::before { content:'✦'; font-size:8px; }
+.menu-badge {
+  font-size:10px; background:var(--orange); color:white;
+  padding:3px 10px; border-radius:100px; font-weight:500; white-space:nowrap;
+  flex-shrink:0;
+}
+.menu-badge.gold {
+  background:linear-gradient(135deg, var(--gold), #e8c96a);
+  color:#5a3e00;
+}
+.menu-toggle { font-size:13px; color:var(--text-muted); transition:transform 0.25s; }
+.menu-item.open .menu-toggle { transform:rotate(180deg); }
+.menu-prices { border-top:1px solid var(--border); padding:9px 15px; display:flex; flex-wrap:wrap; gap:7px; }
+.price-pill {
+  display:flex; align-items:center; gap:5px;
+  padding:4px 12px; background:var(--bg); border-radius:100px; font-size:12px;
+}
+.p-l { color:var(--text-muted); }
+.p-v { font-family:'Cormorant Garamond',serif; font-size:16px; color:var(--orange); }
+.opt-sec { border-top:1px solid var(--border); }
+.opt-sec-ttl {
+  padding:8px 15px; font-size:10px; letter-spacing:0.14em;
+  color:var(--text-muted); background:var(--bg); text-transform:uppercase;
+}
+.opt-row { display:flex; align-items:center; padding:10px 15px; border-top:1px solid var(--border); gap:9px; }
+.opt-plus {
+  width:20px; height:20px; background:var(--orange-pale); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; color:var(--orange); flex-shrink:0;
+}
+.opt-nm { flex:1; font-size:13px; }
+.opt-pr { font-family:'Cormorant Garamond',serif; font-size:16px; color:var(--orange); }
+
+/* accordion detail */
+.menu-detail {
+  display:none; border-top:1px solid var(--border);
+  padding:14px 16px; background:linear-gradient(135deg,rgba(253,240,232,0.5),white);
+  animation:fadeUp 0.25s ease;
+}
+.menu-detail.open { display:block; }
+.menu-detail-body { font-size:13px; line-height:1.85; color:var(--text); margin-bottom:10px; }
+.detail-pts { display:flex; flex-direction:column; gap:6px; }
+.dp {
+  display:flex; align-items:flex-start; gap:8px;
+  font-size:12px; color:var(--text-muted); line-height:1.65;
+}
+.dp-dot {
+  width:16px; height:16px; border-radius:50%; background:var(--orange-pale);
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; color:var(--orange); flex-shrink:0; margin-top:1px;
+}
+
+/* menu context (about today) */
+.menu-advice {
+  background:linear-gradient(135deg, var(--orange-pale) 0%, white 100%);
+  border:1.5px solid rgba(235,96,27,0.2);
+  border-radius:14px; padding:16px 18px; position:relative; overflow:hidden;
+}
+.menu-advice::after {
+  content:'✦'; position:absolute; top:10px; right:14px;
+  font-size:22px; color:rgba(235,96,27,0.1);
+}
+.ma-label { font-size:9.5px; letter-spacing:0.2em; color:var(--orange); text-transform:uppercase; margin-bottom:6px; }
+.ma-title { font-family:'Cormorant Garamond',serif; font-size:19px; font-weight:400; margin-bottom:8px; color:var(--text); line-height:1.3; }
+.ma-body { font-size:13px; line-height:1.85; color:var(--text-muted); }
+
+/* next visit card */
+.next-visit-card {
+  background: linear-gradient(135deg, #f0f7ff 0%, #e8f4ff 100%);
+  border: 1.5px solid #b8d8f8;
+  border-radius: 14px; overflow: hidden;
+}
+.nv-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 15px 10px;
+}
+.nv-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 9.5px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: #3a7bd5; font-weight: 500;
+}
+.nv-tag::before { content: '📅'; font-size: 13px; }
+.nv-body { padding: 0 15px 14px; font-size: 12.5px; color: #4a6080; line-height: 1.75; }
+.nv-menu-preview {
+  margin: 10px 15px 14px;
+  background: white; border: 1px solid #c8dff0; border-radius: 10px;
+  padding: 11px 13px; display: flex; align-items: center; gap: 10px;
+}
+.nv-menu-ico { font-size: 20px; flex-shrink: 0; }
+.nv-menu-nm { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+.nv-menu-dc { font-size: 11px; color: var(--text-muted); }
+
+/* personal message */
+.personal-msg {
+  background:white; border:1.5px solid var(--border);
+  border-left:3px solid var(--orange);
+  border-radius:12px; padding:13px 16px;
+  font-size:13px; line-height:1.8; color:var(--text);
+  display:flex; align-items:flex-start; gap:10px;
+}
+.pmsg-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
+
+.res-footer {
+  padding:14px 20px 32px; background:white; border-top:1px solid var(--border);
+}
+.btn-restart {
+  width:100%; padding:13px; background:white; border:1.5px solid var(--border);
+  color:var(--text-muted); font-family:'Noto Sans JP',sans-serif; font-size:13px;
+  cursor:pointer; border-radius:50px; transition:all 0.22s;
+  display:flex; align-items:center; justify-content:center; gap:7px;
+}
+.btn-restart:hover { border-color:var(--orange-light); color:var(--orange); background:var(--orange-pale); }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ═══ START ═══ -->
+<div class="screen active" id="s-start">
+  <div class="brand-bar">
+    <div class="brand-mark"><svg viewBox="0 0 24 24"><path d="M12 2C9 2 6.5 4 6 7c-.5 2.5.5 5 2.5 6.5C10 15 10 16 9.5 17H14.5c-.5-1-.5-2 1-3.5C17.5 12 18.5 9.5 18 7c-.5-3-3-5-6-5z"/><rect x="9" y="18" width="6" height="2" rx="1"/><rect x="10" y="21" width="4" height="1.5" rx=".75"/></svg></div>
+    <div><div class="brand-name">Cielo</div><div class="brand-loc">IKEBUKURO NISHIGUCHI</div></div>
+  </div>
+  <div class="hero">
+    <div class="hero-orb1"></div>
+    <div class="hero-orb2"></div>
+    <div class="hero-icon">
+      <svg width="42" height="42" viewBox="0 0 44 44" fill="none">
+        <path d="M22 5C16 5 11 9.5 10.5 15.5c-.4 4.5 1.8 8.5 5 10.5C17.5 27.5 18 29.5 17 31h10c-1-1.5-.5-3.5 1.5-5 3.2-2 5.4-6 5-10.5C33 9.5 28 5 22 5z" fill="#EB601B" opacity=".14" stroke="#EB601B" stroke-width="1.4"/>
+        <rect x="18" y="32" width="8" height="2.5" rx="1.25" fill="#EB601B" opacity=".5"/>
+        <rect x="19.5" y="35.5" width="5" height="2" rx="1" fill="#EB601B" opacity=".35"/>
+      </svg>
+    </div>
+    <div class="hero-eyebrow">Hair Consultation · Cielo</div>
+    <h1 class="hero-title">今日の髪、もっと<br><em>良くなれる</em>かもしれない</h1>
+    <p class="hero-desc">目的を選ぶだけ。あなたの髪に合った<br>ケアをご提案します。</p>
+    <div class="hero-sparkline">
+      <span>✦</span> 約2〜3分で完了 <span>·</span> 診断無料
+    </div>
+    <div class="mode-cards">
+      <button class="mode-card" onclick="selectMode('hair')">
+        <div class="mc-inner">
+          <div class="mc-ico a">🔬</div>
+          <div class="mc-info">
+            <div class="mc-ttl">髪質を詳しく診断したい</div>
+            <div class="mc-sub">8問で髪タイプを分析。<br>今の状態を知るところから始めよう</div>
+          </div>
+          <div class="mc-arrow">›</div>
+        </div>
+      </button>
+      <button class="mode-card" onclick="selectMode('menu')">
+        <div class="mc-inner">
+          <div class="mc-ico b">✂️</div>
+          <div class="mc-info">
+            <div class="mc-ttl">今日のメニューに合わせた提案</div>
+            <div class="mc-sub">今日の施術を教えてください。<br>相性◎のオプションをご案内します</div>
+          </div>
+          <div class="mc-arrow">›</div>
+        </div>
+      </button>
+    </div>
+    <div class="hero-note">✦ 回答内容は提案のみに使用します</div>
+  </div>
+</div>
+
+<!-- ═══ MENU SELECT ═══ -->
+<div class="screen" id="s-menusel">
+  <div class="brand-bar">
+    <div class="brand-mark"><svg viewBox="0 0 24 24"><path d="M12 2C9 2 6.5 4 6 7c-.5 2.5.5 5 2.5 6.5C10 15 10 16 9.5 17H14.5c-.5-1-.5-2 1-3.5C17.5 12 18.5 9.5 18 7c-.5-3-3-5-6-5z"/><rect x="9" y="18" width="6" height="2" rx="1"/><rect x="10" y="21" width="4" height="1.5" rx=".75"/></svg></div>
+    <div><div class="brand-name">Cielo</div><div class="brand-loc">IKEBUKURO NISHIGUCHI</div></div>
+  </div>
+  <div class="sel-header">
+    <div class="sel-tag">Today's Menu</div>
+    <div class="sel-title">今日はどんなメニューですか？<br>教えてもらえると嬉しいです ✦</div>
+  </div>
+  <div class="sel-body">
+    <button class="msb" id="msb-cut" onclick="pickMenu('cut')">
+      <div class="msb-inner"><div class="msb-ico">✂️</div><div class="msb-lbl">カット</div><div class="msb-chk" id="chk-cut">✓</div></div>
+      <div class="sub-sel" id="sub-cut">
+        <div class="sub-ttl">カット後のケアは？</div>
+        <div class="sub-opt" id="sopt-shampoo" onclick="pickSub(event,'shampoo')"><div class="sub-dot" id="sdot-shampoo"></div>シャンプーのみ</div>
+        <div class="sub-opt" id="sopt-spa"     onclick="pickSub(event,'spa')">   <div class="sub-dot" id="sdot-spa"></div>ヘッドスパ</div>
+        <div class="sub-opt" id="sopt-tr"      onclick="pickSub(event,'tr')">    <div class="sub-dot" id="sdot-tr"></div>トリートメント追加</div>
+      </div>
+    </button>
+    <button class="msb" id="msb-color"    onclick="pickMenu('color')">   <div class="msb-inner"><div class="msb-ico">🎨</div><div class="msb-lbl">カラー</div>    <div class="msb-chk" id="chk-color">✓</div></div></button>
+    <button class="msb" id="msb-perm"     onclick="pickMenu('perm')">    <div class="msb-inner"><div class="msb-ico">🌀</div><div class="msb-lbl">パーマ</div>    <div class="msb-chk" id="chk-perm">✓</div></div></button>
+    <button class="msb" id="msb-straight" onclick="pickMenu('straight')"><div class="msb-inner"><div class="msb-ico">💆</div><div class="msb-lbl">縮毛矯正</div>  <div class="msb-chk" id="chk-straight">✓</div></div></button>
+    <button class="msb" id="msb-tronly"   onclick="pickMenu('tronly')">  <div class="msb-inner"><div class="msb-ico">✨</div><div class="msb-lbl">トリートメントのみ</div><div class="msb-chk" id="chk-tronly">✓</div></div></button>
+  </div>
+  <div class="nav-row">
+    <button class="btn-back" onclick="showScr('s-start')">← 戻る</button>
+    <button class="btn-next" id="btn-menu-next" onclick="goMenuQuiz()">次のステップへ →</button>
+  </div>
+</div>
+
+<!-- ═══ MENU-MODE MINI QUIZ ═══ -->
+<div class="screen" id="s-menuquiz">
+  <div class="brand-bar">
+    <div class="brand-mark"><svg viewBox="0 0 24 24"><path d="M12 2C9 2 6.5 4 6 7c-.5 2.5.5 5 2.5 6.5C10 15 10 16 9.5 17H14.5c-.5-1-.5-2 1-3.5C17.5 12 18.5 9.5 18 7c-.5-3-3-5-6-5z"/><rect x="9" y="18" width="6" height="2" rx="1"/><rect x="10" y="21" width="4" height="1.5" rx=".75"/></svg></div>
+    <div><div class="brand-name">Cielo</div><div class="brand-loc">IKEBUKURO NISHIGUCHI</div></div>
+  </div>
+  <div class="mq-prog">
+    <div class="mq-dots" id="mq-dots"></div>
+    <div class="mq-tag">あと少し · パーソナライズ</div>
+    <div class="mq-txt" id="mq-txt"></div>
+  </div>
+  <div class="mq-opts" id="mq-opts"></div>
+  <div class="nav-row">
+    <button class="btn-back" id="btn-mqback" onclick="prevMQ()">← 戻る</button>
+    <button class="btn-next" id="btn-mqnext" onclick="nextMQ()">次へ →</button>
+  </div>
+</div>
+
+<!-- ═══ HAIR QUIZ ═══ -->
+<div class="screen" id="s-quiz">
+  <div class="brand-bar">
+    <div class="brand-mark"><svg viewBox="0 0 24 24"><path d="M12 2C9 2 6.5 4 6 7c-.5 2.5.5 5 2.5 6.5C10 15 10 16 9.5 17H14.5c-.5-1-.5-2 1-3.5C17.5 12 18.5 9.5 18 7c-.5-3-3-5-6-5z"/><rect x="9" y="18" width="6" height="2" rx="1"/><rect x="10" y="21" width="4" height="1.5" rx=".75"/></svg></div>
+    <div><div class="brand-name">Cielo</div><div class="brand-loc">IKEBUKURO NISHIGUCHI</div></div>
+  </div>
+  <div class="quiz-top">
+    <div class="prog-row">
+      <div class="step-dots" id="step-dots"></div>
+      <span class="step-cnt" id="step-cnt">1 / 8</span>
+    </div>
+    <div class="q-mode">Hair Diagnosis · あなたの髪を知ろう</div>
+    <div class="q-cat" id="q-cat"></div>
+    <div class="q-txt" id="q-txt"></div>
+  </div>
+  <div class="quiz-opts" id="quiz-opts"></div>
+  <div class="nav-row">
+    <button class="btn-back" id="btn-qback" onclick="prevQ()">← 戻る</button>
+    <button class="btn-next" id="btn-qnext" onclick="nextQ()">次へ →</button>
+  </div>
+</div>
+
+<!-- ═══ LOADING ═══ -->
+<div class="screen load-screen" id="s-loading">
+  <div class="load-logo"><svg viewBox="0 0 24 24"><path d="M12 2C9 2 6.5 4 6 7c-.5 2.5.5 5 2.5 6.5C10 15 10 16 9.5 17H14.5c-.5-1-.5-2 1-3.5C17.5 12 18.5 9.5 18 7c-.5-3-3-5-6-5z"/></svg></div>
+  <div class="load-msg">あなたの髪を分析中</div>
+  <div class="load-dots"><div class="load-dot"></div><div class="load-dot"></div><div class="load-dot"></div></div>
+  <div class="load-sub">最適なケアをご用意しています…</div>
+</div>
+
+<!-- ═══ RESULT ═══ -->
+<div class="screen" id="s-result">
+  <div class="brand-bar" style="background:white;">
+    <div class="brand-mark"><svg viewBox="0 0 24 24"><path d="M12 2C9 2 6.5 4 6 7c-.5 2.5.5 5 2.5 6.5C10 15 10 16 9.5 17H14.5c-.5-1-.5-2 1-3.5C17.5 12 18.5 9.5 18 7c-.5-3-3-5-6-5z"/><rect x="9" y="18" width="6" height="2" rx="1"/><rect x="10" y="21" width="4" height="1.5" rx=".75"/></svg></div>
+    <div><div class="brand-name">Cielo</div><div class="brand-loc">IKEBUKURO NISHIGUCHI</div></div>
+  </div>
+  <div class="res-hero">
+    <div class="r-mode-tag" id="r-mtag"></div>
+    <div class="r-sparkle" id="r-sparkle">✨</div>
+    <div class="r-type" id="r-type"></div>
+    <div class="r-sub" id="r-sub"></div>
+  </div>
+  <div class="res-body" id="r-body"></div>
+  <div class="res-footer">
+    <button class="btn-restart" onclick="restart()">↺ もう一度はじめる</button>
+  </div>
+</div>
+
+</div><!-- /app -->
+<script>
+// ─── STATE ───
+let appMode=null, selMenu=null, selSub=null;
+let cur=0, answers=[];
+let mqCur=0, mqAnswers=[];
+
+// ─── MENU DATA ───
+const M = {
+  headSpa:{
+    icon:"💆", nm:"ヘッドスパ", dc:"頭皮をリセット、髪に息吹を",
+    prices:[{l:"ショート",v:"¥1,000"},{l:"ロング",v:"¥2,000"}],
+    detail:"頭皮の皮脂汚れをすっきり落としながら専用のマッサージで血行促進。施術後は「根元がふわっと軽くなった！」と感じる方が多いです。リラックス効果も◎",
+    points:["毛穴の詰まりをすっきりリセット","血行促進で髪本来のコシとツヤを引き出す","施術中のマッサージが気持ちいい、とご好評"],
+  },
+  step3TR:{
+    icon:"✨", nm:"3stepトリートメント", dc:"3段階補修で艶・しなやかさを集中ケア",
+    prices:[{l:"一律",v:"¥1,500"}],
+    detail:"3種のトリートメント剤を重ね付けし、髪の内部・外部を段階的にケア。「翌日の手触りが全然違う」と実感いただけるメニューです。",
+    points:["内部補修→水分補給→コーティングの3段階","カラー・パーマ後の仕上げに特に相性が良い","効果が持続し、次のご来店まで髪がきれい"],
+  },
+  systemTR:{
+    icon:"💎", nm:"システムトリートメント", dc:"プロ仕様の本格補修、一段上の仕上がりへ",
+    prices:[{l:"一律",v:"¥2,200"}], hot:true,
+    opts:[{n:"＋スチーム",p:"¥1,000"},{n:"＋超音波",p:"¥2,000"}],
+    detail:"ドラッグストアでは手に入らないサロン専売処方を使用。ケラチンやCMCを集中補給し、「こんなにサラサラになるの！？」という驚きの仕上がりを実現します。",
+    points:["サロン専売の高濃度トリートメント剤を使用","スチーム追加で成分が髪内部に深く浸透","超音波追加で史上最高の手触りを体験できる"],
+  },
+  shitsukanColor:{
+    icon:"🌊", nm:"質感再整カラー", dc:"カラーと同時にできる特殊ケア",
+    prices:[{l:"¥3,000",v:"〜"}], hot:true,
+    opts:[{n:"＋1step",p:"¥1,000"},{n:"＋2step",p:"¥1,500"},{n:"＋3step",p:"¥2,000"},{n:"＋4step",p:"¥2,500"}],
+    detail:"カラー剤に0番を混ぜて施術することで、カラーしながら髪の質感を同時にケア。シャンプー後にメニューに合わせて1〜4番のケア剤を重ねていきます。カラーと一体化した施術なので、色の仕上がりもケアも一石二鳥！",
+    points:["カラー剤に0番を混ぜる、カラー専用の特殊ケア","シャンプー後に1〜4番で段階的にケアを重ねる","カラーの発色を活かしながら質感を同時に整える"],
+  },
+  shitsukanEste:{
+    icon:"💫", nm:"質感再整エステ", dc:"うねり・くせ・広がりを根本から改善",
+    prices:[{l:"¥3,000",v:"〜"}], hot:false,
+    detail:"髪質改善に特化したエステメニュー。カラートリートメントとは根本的に異なる施術で、うねりや癖毛、広がりを継続的にケアしていきます。カラーなしでも受けられます。",
+    points:["うねり・くせ・広がりを継続的に改善","カラーなしでも受けられる髪質改善メニュー","質感再整カラーとは根本的に異なるアプローチ"],
+  },
+};
+
+// includes label per menu key
+const INCLUDES = {
+  headSpa:        "ヘッドスパを含むメニュー",
+  step3TR:        "3stepトリートメントを含むメニュー",
+  systemTR:       "システムトリートメントを含むメニュー",
+  shitsukanColor: "質感再整カラーを含むメニュー",
+  shitsukanEste:  "質感再整エステを含むメニュー",
+};
+
+// ─── QUESTIONS ───
+const Qs = [
+  {cat:"Head & Scalp", txt:"地肌の状態はどれに近いですか？",        opts:["べたつきやすく、夕方には気になる","乾燥してかゆくなることがある","Tゾーンのみ、季節で変わる","特に気にならない"]},
+  {cat:"Hair Volume",  txt:"髪のボリューム感はいかがですか？",       opts:["ぺたんこになりやすく根元が立ちにくい","ふわふわしすぎてまとまらない","時間が経つとトップが潰れる","程よいボリュームで安定"]},
+  {cat:"Damage Level", txt:"カラーやパーマの頻度はどのくらい？",     opts:["2ヶ月に1回以上カラー","パーマをかけている","カラーもパーマもほぼしない","以前はしていたがやめた"]},
+  {cat:"Texture",      txt:"髪の手触り・質感に近いのは？",           opts:["硬くコシがある、太い","柔らかくて細い、猫っ毛","ゴワゴワして指通りが悪い","サラサラで問題なし"]},
+  {cat:"Hair Curl",    txt:"乾かしたあとの髪の状態は？",             opts:["うねりやくせが出る","まっすぐだけどハネる","広がってまとまらない","まとまりがよい"]},
+  {cat:"Moisture",     txt:"乾燥やパサつきを感じるのは？",           opts:["常にパサパサしている","洗髪後しばらくすると乾燥","湿気が多いと逆に広がる","特に乾燥は感じない"]},
+  {cat:"Care Routine", txt:"普段のヘアケアで使っているものは？",     opts:["シャンプーのみ","シャンプー＋コンディショナー","シャンプー＋トリートメント（週1以上）","オイルや洗い流さないケアも使う"]},
+  {cat:"Concern",      txt:"一番気になっているお悩みは？",           opts:["ボリュームが出ない・ぺたんこ","パサつき・ダメージが気になる","うねり・くせ・広がり","頭皮のべたつき・においが気になる"]},
+];
+
+const MQs = [
+  {txt:"このメニューはいつも受けていますか？",         opts:["はじめて","たまに（3回以内）","定期的に受けている","ずっと同じメニューを続けている"]},
+  {txt:"今の髪のダメージ感はどのくらいですか？",       opts:["かなりパサつき・ゴワつきが気になる","少し傷んでいる気がする","あまりダメージは感じない","健康で問題ない"]},
+  {txt:"前回のご来店からどのくらい経ちますか？",       opts:["1ヶ月以内","1〜2ヶ月","2〜3ヶ月","3ヶ月以上 / 初来店"]},
+];
+
+// ─── HAIR RESULTS ───
+// menus: { low: ダメージ軽め, high: ダメージ重め }
+const R = {
+  dry:{
+    sparkle:"🔥",
+    type:"ドライ＆ダメージタイプ",
+    sub:"集中ケアで、今日から髪が変わり始めます。艶やかで手触りの良い髪へ、一緒に変えていきましょう！",
+    traits:["乾燥","ダメージ","パサつき","枝毛・切れ毛"],
+    dmg:{lv:4,lbl:"ダメージ大",desc:"キューティクルの損傷が進んでいますが、適切なケアで必ず改善できます！まずは今日のサロンケアから。"},
+    advice:["週2回以上の集中トリートメントで急速ケア🌿","洗い流さないオイルで毎日の水分蒸発をブロック","保湿成分配合のシャンプーに切り替えてみて"],
+    menus:{
+      low: ["headSpa","step3TR","shitsukanEste"],   // ダメージ感じない〜少し
+      high:["systemTR","step3TR","shitsukanEste"],  // かなり〜少しパサつく
+    },
+  },
+  oily:{
+    sparkle:"🌿",
+    type:"オイリー＆スカルプタイプ",
+    sub:"頭皮ケアが、美髪への一番の近道。根元からふんわり、軽やかな髪を目指しましょう！",
+    traits:["皮脂多め","べたつき","根元ぺたんこ","頭皮トラブル"],
+    dmg:{lv:2,lbl:"ダメージ少",desc:"毛先よりも頭皮ケアが最優先！皮脂バランスを整えるだけで、根元がふわっと変わります。"},
+    advice:["スカルプ用シャンプーで頭皮の皮脂バランスを整えて","トリートメントは毛先のみ。頭皮への塗布はNG","週1回のスカルプマッサージで血行をアップ💆"],
+    menus:{
+      low: ["headSpa","step3TR"],                  // ダメージ少 → スパ中心
+      high:["headSpa","systemTR","step3TR"],        // ダメージ重め → スパ＋補修
+    },
+  },
+  frizzy:{
+    sparkle:"🌊",
+    type:"うねり＆くせ毛タイプ",
+    sub:"うねりをコントロールして、扱いやすい髪へ。毎朝のスタイリングがずっと楽になります！",
+    traits:["うねり","広がり","湿気に弱い","まとまりにくい"],
+    dmg:{lv:3,lbl:"ダメージ中",desc:"うねりで摩擦が起きやすい状態。コーティングケアで湿気をブロックし、まとまりやすい髪を手に入れましょう！"},
+    advice:["アウトバストリートメントで水分をコーティング💧","タオルドライは優しく押さえるように。摩擦に注意","スタイリング剤でキューティクルを整えてみて"],
+    menus:{
+      low: ["shitsukanEste","step3TR"],            // ダメージ少 → 質感改善優先
+      high:["shitsukanEste","systemTR","step3TR"], // ダメージ重め → 質感改善＋補修
+    },
+  },
+  normal:{
+    sparkle:"✨",
+    type:"ノーマル＆バランスタイプ",
+    sub:"今の髪の状態は良好！この状態を維持しながら、さらなる艶と輝きを一緒に目指しましょう！",
+    traits:["バランス良好","健康的","維持ケア","輝き"],
+    dmg:{lv:1,lbl:"良好",desc:"今の状態は良好です！定期的なサロンケアでこの美しい状態を長くキープしていきましょう🌟"},
+    advice:["月1のサロンケアで今の状態をキープ✨","カラー・パーマ前後の集中ケアが特に大切","紫外線・熱ダメージ対策を日課にしよう"],
+    menus:{
+      low: ["step3TR","headSpa"],                  // 健康 → 軽めのケアで維持
+      high:["systemTR","step3TR"],                 // 少し傷んでいる → 補修を
+    },
+  },
+};
+
+// ─── MENU RESULT DATA ───
+const menuData = {
+  cut:{
+    shampoo:{ label:"カット＋シャンプー", sub:"シンプルに、でも確実に。",       body:"カット後はシャンプーのみのコースです。次のステップとして、ヘッドスパや3stepトリートメントを加えると仕上がりが格段に変わります。", keys:["headSpa","step3TR"] },
+    spa:    { label:"カット＋ヘッドスパ", sub:"リフレッシュしながら、美髪へ。",  body:"頭皮環境を整えながら仕上げる贅沢なコース。血行が促進され、根元からふんわり立ち上がった仕上がりが体感できます。", keys:["headSpa","step3TR"] },
+    tr:     { label:"カット＋トリートメント", sub:"毛先まで、完璧な仕上がりへ。", body:"カット後にトリートメントで毛先まで美しく仕上げるコース。ダメージが気になる方は3stepまたはシステムTRがおすすめです。", keys:["step3TR","systemTR"] },
+    none:   { label:"カット",              sub:"カットで新しい自分へ。",          body:"カット後の仕上がりをさらに高めるオプションをご提案します。", keys:["step3TR","headSpa"] },
+  },
+  color:    { label:"カラー",     sub:"色を入れた後こそ、ケアが仕上げになる。",         body:"カラー後はキューティクルが開いた状態。このタイミングにトリートメントを入れることでカラーの発色が長持ちし、艶も段違いになります。システムTRにスチームを加えると特に効果的！", keys:["systemTR","step3TR"], colorNote:true },
+  perm:     { label:"パーマ",     sub:"ふんわりカールをもっと長持ちさせたい方へ。",      body:"パーマ薬剤は髪に負担がかかります。施術後にシステムTRで内部を補修すると、カールが長持ちして翌日からのスタイリングも楽になります。", keys:["systemTR","step3TR"] },
+  straight: { label:"縮毛矯正",   sub:"真っすぐな髪は、ちゃんとケアしてあげて。",       body:"矯正後はタンパク質が失われた状態です。今日こそしっかり補修のタイミング。システムTR＋超音波で深部まで栄養を届けると、サラサラが長続きします。", keys:["systemTR","step3TR"] },
+  tronly:   { label:"トリートメント", sub:"今日は髪に専念。最高のケアをお届けします。", body:"トリートメントに集中するコースです。髪の状態に合わせて3step・システムTRから最適なものをご提案します。", keys:["step3TR","systemTR"] },
+};
+
+// ─── UTILS ───
+function showScr(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function menuCardHTML(key, badge, showIncludes) {
+  const m = M[key];
+  const prices = m.prices.map(p=>`<div class="price-pill"><span class="p-l">${p.l}</span><span class="p-v">${p.v}</span></div>`).join('');
+  const opts = m.opts ? `<div class="opt-sec"><div class="opt-sec-ttl">オプション追加</div>${m.opts.map(o=>`<div class="opt-row"><div class="opt-plus">＋</div><div class="opt-nm">${o.n}</div><div class="opt-pr">${o.p}</div></div>`).join('')}</div>` : '';
+  const points = m.points.map(p=>`<div class="dp"><div class="dp-dot">✓</div>${p}</div>`).join('');
+  const includesHTML = showIncludes && INCLUDES[key] ? `<div class="menu-includes">${INCLUDES[key]}</div>` : '';
+  const badgeHTML = badge ? `<span class="menu-badge${badge==='相性◎'?' gold':''}">${badge}</span>` : '';
+  return `<div class="menu-item${m.hot?' hot':''}" onclick="toggleDetail('det-${key}',this)">
+    <div class="menu-head">
+      <div class="menu-ico">${m.icon}</div>
+      <div style="flex:1">
+        <div class="menu-nm">${m.nm}</div>
+        <div class="menu-dc">${m.dc}</div>
+        ${includesHTML}
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+        ${badgeHTML}
+        <span class="menu-toggle">▾</span>
+      </div>
+    </div>
+    <div class="menu-prices">${prices}</div>
+    <div class="menu-detail" id="det-${key}">
+      <div class="menu-detail-body">${m.detail}</div>
+      <div class="detail-pts">${points}</div>
+    </div>
+    ${opts}
+  </div>`;
+}
+
+function toggleDetail(id, card) {
+  const el = document.getElementById(id);
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.menu-detail').forEach(d=>d.classList.remove('open'));
+  document.querySelectorAll('.menu-item').forEach(c=>c.classList.remove('open'));
+  if (!isOpen) { el.classList.add('open'); card.classList.add('open'); }
+}
+
+function dmgHTML(d) {
+  const bars=[1,2,3,4].map(i=>`<div class="dmg-seg${i<=d.lv?' s'+d.lv:''}"></div>`).join('');
+  return `<div class="dmg-card">
+    <div class="dmg-head"><span class="dmg-lbl">現在の髪の状態</span><span class="dmg-badge d${d.lv}">${d.lbl}</span></div>
+    <div class="dmg-bars">${bars}</div>
+    <div class="dmg-scale"><span>健康</span><span>やや乾燥</span><span>ダメージ中</span><span>ダメージ大</span></div>
+    <div class="dmg-desc">${d.desc}</div></div>`;
+}
+
+// ─── MODE SELECT ───
+function selectMode(mode) {
+  appMode = mode;
+  if (mode==='hair') { cur=0; answers=[]; showScr('s-quiz'); renderQ(); }
+  else showScr('s-menusel');
+}
+
+// ─── MENU SELECT ───
+const allMenus=['cut','color','perm','straight','tronly'];
+function pickMenu(key) {
+  allMenus.forEach(k=>document.getElementById('msb-'+k).classList.remove('sel'));
+  selMenu=key; selSub=null;
+  document.getElementById('msb-'+key).classList.add('sel');
+  const sc=document.getElementById('sub-cut');
+  if(sc) sc.classList.toggle('open', key==='cut');
+  if(key!=='cut') ['shampoo','spa','tr'].forEach(s=>document.getElementById('sopt-'+s).classList.remove('sel'));
+  document.getElementById('btn-menu-next').classList.add('on');
+}
+function pickSub(e, sub) {
+  e.stopPropagation(); selSub=sub;
+  ['shampoo','spa','tr'].forEach(s=>{
+    document.getElementById('sopt-'+s).classList.toggle('sel',s===sub);
+    document.getElementById('sdot-'+s).textContent=s===sub?'✓':'';
+  });
+}
+function goMenuQuiz() {
+  if(!selMenu) return;
+  mqCur=0; mqAnswers=[];
+  showScr('s-menuquiz'); renderMQ();
+}
+
+// ─── MINI QUIZ ───
+function renderMQ() {
+  const q=MQs[mqCur];
+  document.getElementById('mq-dots').innerHTML=MQs.map((_,i)=>`<div class="mq-dot ${i<mqCur?'done':i===mqCur?'active':''}"></div>`).join('');
+  document.getElementById('mq-txt').textContent=q.txt;
+  const c=document.getElementById('mq-opts'); c.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='opt-btn'+(mqAnswers[mqCur]===i?' sel':'');
+    b.innerHTML=`<span class="opt-circle">${mqAnswers[mqCur]===i?'✓':''}</span>${o}`;
+    b.onclick=()=>pickMQ(i); c.appendChild(b);
+  });
+  const nb=document.getElementById('btn-mqnext');
+  nb.textContent=mqCur===MQs.length-1?'提案を見る ✦':'次へ →';
+  nb.classList.toggle('on', mqAnswers[mqCur]!==undefined);
+  document.getElementById('btn-mqback').style.display=mqCur===0?'none':'';
+}
+function pickMQ(i) {
+  mqAnswers[mqCur]=i;
+  document.querySelectorAll('#mq-opts .opt-btn').forEach((b,idx)=>{
+    b.classList.toggle('sel',idx===i);
+    b.querySelector('.opt-circle').textContent=idx===i?'✓':'';
+  });
+  document.getElementById('btn-mqnext').classList.add('on');
+}
+function nextMQ() {
+  if(mqAnswers[mqCur]===undefined) return;
+  if(mqCur<MQs.length-1){mqCur++;renderMQ();}
+  else{showScr('s-loading');setTimeout(()=>{renderMenuResult();showScr('s-result');},1800);}
+}
+function prevMQ() { if(mqCur>0){mqCur--;renderMQ();}else showScr('s-menusel'); }
+
+// ─── HAIR QUIZ ───
+function renderQ() {
+  const q=Qs[cur];
+  document.getElementById('step-dots').innerHTML=Qs.map((_,i)=>`<div class="step-dot ${i<cur?'done':i===cur?'active':''}"></div>`).join('');
+  document.getElementById('step-cnt').textContent=`${cur+1} / ${Qs.length}`;
+  document.getElementById('q-cat').textContent=q.cat;
+  document.getElementById('q-txt').textContent=q.txt;
+  const c=document.getElementById('quiz-opts'); c.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='opt-btn'+(answers[cur]===i?' sel':'');
+    b.innerHTML=`<span class="opt-circle">${answers[cur]===i?'✓':''}</span>${o}`;
+    b.onclick=()=>pick(i); c.appendChild(b);
+  });
+  const nb=document.getElementById('btn-qnext');
+  nb.textContent=cur===Qs.length-1?'結果を見る ✦':'次へ →';
+  nb.classList.toggle('on',answers[cur]!==undefined);
+  document.getElementById('btn-qback').style.display=cur===0?'none':'';
+}
+function pick(i) {
+  answers[cur]=i;
+  document.querySelectorAll('#quiz-opts .opt-btn').forEach((b,idx)=>{
+    b.classList.toggle('sel',idx===i);
+    b.querySelector('.opt-circle').textContent=idx===i?'✓':'';
+  });
+  document.getElementById('btn-qnext').classList.add('on');
+}
+function nextQ() {
+  if(answers[cur]===undefined) return;
+  if(cur<Qs.length-1){cur++;renderQ();}
+  else{showScr('s-loading');setTimeout(()=>{renderHairResult();showScr('s-result');},2000);}
+}
+function prevQ(){if(cur>0){cur--;renderQ();}}
+
+function calcType() {
+  const s={dry:0,oily:0,frizzy:0,normal:0};
+  const map=[['oily','dry','frizzy','normal'],['normal','frizzy','oily','dry'],['dry','dry','normal','dry'],['oily','dry','dry','normal'],['frizzy','frizzy','frizzy','normal'],['dry','dry','frizzy','normal'],['dry','normal','dry','normal'],['normal','dry','frizzy','oily']];
+  answers.forEach((a,qi)=>{if(map[qi]?.[a])s[map[qi][a]]++;});
+  return Object.entries(s).sort((a,b)=>b[1]-a[1])[0][0];
+}
+
+// ─── RENDER HAIR RESULT ───
+function renderHairResult() {
+  const r = R[calcType()];
+
+  // Q3(カラー頻度)・Q6(乾燥)・Q8(お悩み) からダメージスコアを算出
+  // answers[2]: 0=頻繁カラー, 1=パーマ → +1  answers[5]: 0=常にパサパサ, 1=乾燥 → +1  answers[7]: 1=パサつき → +1
+  let dmgScore = 0;
+  if (answers[2]===0 || answers[2]===1) dmgScore++;
+  if (answers[5]===0 || answers[5]===1) dmgScore++;
+  if (answers[7]===1) dmgScore++;
+  const dmgLevel = dmgScore >= 2 ? 'high' : 'low';
+  const menuKeys = r.menus[dmgLevel];
+
+  document.getElementById('r-mtag').textContent='髪質診断 · Hair Diagnosis';
+  document.getElementById('r-sparkle').textContent=r.sparkle;
+  document.getElementById('r-type').textContent=r.type;
+  document.getElementById('r-sub').textContent=r.sub;
+  const menus=menuKeys.map((k,i)=>menuCardHTML(k,i===0?'おすすめ':null,false)).join('');
+  document.getElementById('r-body').innerHTML=`
+    <div><div class="r-ttl">ダメージレベル</div>${dmgHTML(r.dmg)}</div>
+    <div><div class="r-ttl">髪質の特徴</div><div class="traits-wrap">${r.traits.map(t=>`<span class="trait">${t}</span>`).join('')}</div></div>
+    <div><div class="r-ttl">ホームケアアドバイス</div><div class="advice-wrap">${r.advice.map(a=>`<div class="advice-card">${a}</div>`).join('')}</div></div>
+    <div><div class="r-ttl">今日のメニューにおすすめ</div><div style="margin-bottom:8px;font-size:12px;color:var(--text-muted)">タップすると詳細が見られます ▾</div><div class="menu-list">${menus}</div></div>`;
+}
+
+// ─── RENDER MENU RESULT ───
+function renderMenuResult() {
+  let d;
+  if(selMenu==='cut'){d=menuData.cut[selSub||'none'];}
+  else{d=menuData[selMenu];}
+
+  const freq=mqAnswers[0];
+  const dmgFeel=mqAnswers[1];
+  const interval=mqAnswers[2];
+
+  let pIcon='✦', pMsg='';
+  if(freq===0){pIcon='🎉';pMsg='はじめてのご来店、ようこそ！まずは気軽に、髪に合ったケアをお試しください。';}
+  else if(freq===3){pIcon='🙏';pMsg='いつもご利用ありがとうございます。今回は一段階アップしたケアを体感してみませんか？';}
+  if(dmgFeel===0||dmgFeel===1){if(pMsg)pMsg+=' ';pIcon=pMsg?pIcon:'⚡';pMsg+='ダメージが気になる今こそ、補修ケアを入れる絶好のタイミングです！';}
+  if(interval>=2){if(pMsg)pMsg+=' ';pMsg+='お久しぶりのご来店ですので、今日はしっかりケアを入れることをおすすめします。';}
+
+  document.getElementById('r-mtag').textContent="今日のメニュー提案 · Today's Suggestion";
+  document.getElementById('r-sparkle').textContent='🎯';
+  document.getElementById('r-type').textContent=d.label;
+  document.getElementById('r-sub').textContent=d.sub;
+
+  // dmgFeel: 0=かなりパサつく, 1=少し傷んでいる, 2=あまり感じない, 3=健康
+  // ダメージ重め(0,1) → systemTR優先、軽め(2,3) → headSpa・3step優先
+  const isHighDmg = dmgFeel === 0 || dmgFeel === 1;
+
+  // ベースのkeysをダメージ感で並び替え・差し替え
+  let menuKeys = [...d.keys];
+  if (isHighDmg) {
+    // systemTRが含まれていなければ先頭に追加、headSpaは後ろへ
+    if (!menuKeys.includes('systemTR')) menuKeys.unshift('systemTR');
+    else menuKeys.sort((a,b) => a==='systemTR' ? -1 : b==='systemTR' ? 1 : 0);
+    // ヘッドスパがあれば末尾へ
+    const spaIdx = menuKeys.indexOf('headSpa');
+    if (spaIdx > -1) { menuKeys.splice(spaIdx,1); menuKeys.push('headSpa'); }
+  } else {
+    // ダメージ軽め → headSpaが含まれていなければ追加、最大3件
+    if (!menuKeys.includes('headSpa') && selMenu !== 'color') menuKeys.push('headSpa');
+    // systemTRは後ろへ
+    const syIdx = menuKeys.indexOf('systemTR');
+    if (syIdx > -1) { menuKeys.splice(syIdx,1); menuKeys.push('systemTR'); }
+  }
+  // 最大3件に絞る
+  menuKeys = menuKeys.slice(0, 3);
+
+  const menus = menuKeys.map((k,i)=>menuCardHTML(k,i===0?'相性◎':null, selMenu!=='cut')).join('');
+  const personalBlock=pMsg?`<div class="personal-msg"><div class="pmsg-icon">${pIcon}</div><div>${pMsg}</div></div>`:'';
+
+  // 次回提案ブロック（質感再整カラーはカラー専用かつ当日変更ほぼ不可）
+  let nextVisitBlock = '';
+  if (d.colorNote) {
+    const nm = M['shitsukanColor'];
+    nextVisitBlock = `
+    <div>
+      <div class="r-ttl">次回のご来店でぜひご体感を</div>
+      <div class="next-visit-card">
+        <div class="nv-header">
+          <div class="nv-tag">Next Visit · 次回カラーのときに</div>
+        </div>
+        <div class="nv-body">カラー放置中の方は、ぜひ次回ご体感ください🙌<br><br>カラー剤に0番を混ぜて施術する特殊ケア「質感再整カラー」は、カラーメニュー専用のオプションです。タイミングによって当日の変更が難しい場合がほとんどのため、<strong>次回のカラーご予約の際にスタッフにお声がけください。</strong></div>
+        <div class="nv-menu-preview">
+          <div class="nv-menu-ico">${nm.icon}</div>
+          <div>
+            <div class="nv-menu-nm">${nm.nm}</div>
+            <div class="nv-menu-dc">${nm.dc}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('r-body').innerHTML=`
+    <div>
+      <div class="r-ttl">今日のメニューについて</div>
+      <div class="menu-advice">
+        <div class="ma-label">Cielo からのひとこと</div>
+        <div class="ma-title">${d.label}</div>
+        <div class="ma-body">${d.body}</div>
+      </div>
+      ${personalBlock?`<div style="margin-top:10px">${personalBlock}</div>`:''}
+    </div>
+    <div>
+      <div class="r-ttl">今日のメニューにおすすめ</div>
+      <div style="margin-bottom:8px;font-size:12px;color:var(--text-muted)">タップすると詳細が見られます ▾</div>
+      <div class="menu-list">${menus}</div>
+    </div>
+    ${nextVisitBlock}`;
+}
+
+// ─── RESTART ───
+function restart() {
+  appMode=null;selMenu=null;selSub=null;cur=0;answers=[];mqCur=0;mqAnswers=[];
+  allMenus.forEach(k=>document.getElementById('msb-'+k).classList.remove('sel'));
+  const sc=document.getElementById('sub-cut');if(sc)sc.classList.remove('open');
+  ['shampoo','spa','tr'].forEach(s=>{document.getElementById('sopt-'+s).classList.remove('sel');document.getElementById('sdot-'+s).textContent='';});
+  document.getElementById('btn-menu-next').classList.remove('on');
+  showScr('s-start');
+}
+</script>
+</body>
+</html>
