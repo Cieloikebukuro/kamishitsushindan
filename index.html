@@ -752,15 +752,30 @@ const INCLUDES = {
 
 // ─── QUESTIONS ───
 const Qs = [
-  {cat:"Head & Scalp", txt:"地肌の状態はどれに近いですか？",        opts:["べたつきやすく、夕方には気になる","乾燥してかゆくなることがある","Tゾーンのみ、季節で変わる","特に気にならない"]},
-  {cat:"Hair Volume",  txt:"髪のボリューム感はいかがですか？",       opts:["ぺたんこになりやすく根元が立ちにくい","ふわふわしすぎてまとまらない","時間が経つとトップが潰れる","程よいボリュームで安定"]},
-  {cat:"Damage Level", txt:"カラーやパーマの頻度はどのくらい？",     opts:["2ヶ月に1回以上カラー","パーマをかけている","カラーもパーマもほぼしない","以前はしていたがやめた"]},
-  {cat:"Texture",      txt:"髪の手触り・質感に近いのは？",           opts:["硬くコシがある、太い","柔らかくて細い、猫っ毛","ゴワゴワして指通りが悪い","サラサラで問題なし"]},
-  {cat:"Hair Curl",    txt:"乾かしたあとの髪の状態は？",             opts:["うねりやくせが出る","まっすぐだけどハネる","広がってまとまらない","まとまりがよい"]},
-  {cat:"Moisture",     txt:"乾燥やパサつきを感じるのは？",           opts:["常にパサパサしている","洗髪後しばらくすると乾燥","湿気が多いと逆に広がる","特に乾燥は感じない"]},
-  {cat:"Care Routine", txt:"普段のヘアケアで使っているものは？",     opts:["シャンプーのみ","シャンプー＋コンディショナー","シャンプー＋トリートメント（週1以上）","オイルや洗い流さないケアも使う"]},
-  {cat:"Concern",      txt:"一番気になっているお悩みは？",           opts:["ボリュームが出ない・ぺたんこ","パサつき・ダメージが気になる","うねり・くせ・広がり","頭皮のべたつき・においが気になる"]},
+  {cat:"Hair Length",    txt:"今の髪の長さはどのくらいですか？",
+   opts:["ショート（あご上〜耳上）","ミディアム（あご〜肩）","ロング（鎖骨以下）","ロング（胸下・それ以上）"]},
+  {cat:"Color History",  txt:"カラーはどのくらいの頻度でしていますか？",
+   opts:["していない","3ヶ月に1回くらい","2ヶ月に1回くらい","1ヶ月に1回くらい"]},
+  {cat:"Color Years",    txt:"カラーをはじめてどのくらい経ちますか？",
+   opts:["していない / 1年未満","1〜2年","3〜4年","5年以上"],
+   skip: (ans) => ans[1] === 0 },  // カラーなしならスキップ
+  {cat:"Bleach",         txt:"ブリーチ（脱色）の経験はありますか？",
+   opts:["なし","1〜2回","3回以上"]},
+  {cat:"Perm / Straight",txt:"縮毛矯正・デジタルパーマの経験はありますか？",
+   opts:["なし","あり（現在も継続）","以前していたがやめた"]},
+  {cat:"Perm",           txt:"通常のパーマ経験はありますか？",
+   opts:["なし","あり（現在も継続）","以前していたがやめた"]},
+  {cat:"Hair Concern",   txt:"今一番気になっているお悩みは？",
+   opts:["パサつき・ダメージ・切れ毛","うねり・くせ・広がり","頭皮のべたつき・においが気になる","特になし・艶をもっと出したい"]},
+  {cat:"Scalp & Texture",txt:"地肌の状態と手触りはどちらに近いですか？",
+   opts:["べたつきやすく、根元がぺたんこ","乾燥してかゆくなることがある","ゴワゴワ・指通りが悪い","サラサラ・特に問題なし"]},
 ];
+
+// スキップ判定（カラー歴はカラーなしの場合スキップ）
+function shouldSkip(qIdx) {
+  if (qIdx === 2 && answers[1] === 0) return true;
+  return false;
+}
 
 const MQs = [
   {txt:"このメニューはいつも受けていますか？",         opts:["はじめて","たまに（3回以内）","定期的に受けている","ずっと同じメニューを続けている"]},
@@ -769,54 +784,62 @@ const MQs = [
 ];
 
 // ─── HAIR RESULTS ───
-// menus: { low: ダメージ軽め, high: ダメージ重め }
+// menus: Lv1〜6 それぞれのおすすめキー配列
 const R = {
   dry:{
-    sparkle:"🔥",
-    type:"ドライ＆ダメージタイプ",
+    sparkle:"🔥", type:"ドライ＆ダメージタイプ",
     sub:"集中ケアで、今日から髪が変わり始めます。艶やかで手触りの良い髪へ、一緒に変えていきましょう！",
     traits:["乾燥","ダメージ","パサつき","枝毛・切れ毛"],
-    dmg:{lv:4,lbl:"ダメージ大",desc:"キューティクルの損傷が進んでいますが、適切なケアで必ず改善できます！まずは今日のサロンケアから。"},
     advice:["週2回以上の集中トリートメントで急速ケア🌿","洗い流さないオイルで毎日の水分蒸発をブロック","保湿成分配合のシャンプーに切り替えてみて"],
     menus:{
-      low: ["headSpa","step3TR","shitsukanEste"],   // ダメージ感じない〜少し
-      high:["systemTR","step3TR","shitsukanEste"],  // かなり〜少しパサつく
+      1:["step3TR","headSpa"],
+      2:["step3TR","headSpa","systemTR"],
+      3:["systemTR","step3TR"],
+      4:["systemTR","step3TR"],       // ナノスチームはsystemTRカード内optionで案内
+      5:["systemTR","step3TR"],
+      6:["systemTR","step3TR"],
     },
   },
   oily:{
-    sparkle:"🌿",
-    type:"オイリー＆スカルプタイプ",
+    sparkle:"🌿", type:"オイリー＆スカルプタイプ",
     sub:"頭皮ケアが、美髪への一番の近道。根元からふんわり、軽やかな髪を目指しましょう！",
     traits:["皮脂多め","べたつき","根元ぺたんこ","頭皮トラブル"],
-    dmg:{lv:2,lbl:"ダメージ少",desc:"毛先よりも頭皮ケアが最優先！皮脂バランスを整えるだけで、根元がふわっと変わります。"},
     advice:["スカルプ用シャンプーで頭皮の皮脂バランスを整えて","トリートメントは毛先のみ。頭皮への塗布はNG","週1回のスカルプマッサージで血行をアップ💆"],
     menus:{
-      low: ["headSpa","step3TR"],                  // ダメージ少 → スパ中心
-      high:["headSpa","systemTR","step3TR"],        // ダメージ重め → スパ＋補修
+      1:["headSpa","step3TR"],
+      2:["headSpa","step3TR"],
+      3:["headSpa","systemTR","step3TR"],
+      4:["headSpa","systemTR","step3TR"],
+      5:["headSpa","systemTR"],
+      6:["headSpa","systemTR"],
     },
   },
   frizzy:{
-    sparkle:"🌊",
-    type:"うねり＆くせ毛タイプ",
+    sparkle:"🌊", type:"うねり＆くせ毛タイプ",
     sub:"うねりをコントロールして、扱いやすい髪へ。毎朝のスタイリングがずっと楽になります！",
     traits:["うねり","広がり","湿気に弱い","まとまりにくい"],
-    dmg:{lv:3,lbl:"ダメージ中",desc:"うねりで摩擦が起きやすい状態。コーティングケアで湿気をブロックし、まとまりやすい髪を手に入れましょう！"},
     advice:["アウトバストリートメントで水分をコーティング💧","タオルドライは優しく押さえるように。摩擦に注意","スタイリング剤でキューティクルを整えてみて"],
     menus:{
-      low: ["shitsukanEste","step3TR"],            // ダメージ少 → 質感改善優先
-      high:["shitsukanEste","systemTR","step3TR"], // ダメージ重め → 質感改善＋補修
+      1:["step3TR"],            // esteは条件付きで別途追加
+      2:["step3TR"],
+      3:["systemTR","step3TR"],
+      4:["systemTR","step3TR"],
+      5:["systemTR","step3TR"],
+      6:["systemTR"],
     },
   },
   normal:{
-    sparkle:"✨",
-    type:"ノーマル＆バランスタイプ",
+    sparkle:"✨", type:"ノーマル＆バランスタイプ",
     sub:"今の髪の状態は良好！この状態を維持しながら、さらなる艶と輝きを一緒に目指しましょう！",
     traits:["バランス良好","健康的","維持ケア","輝き"],
-    dmg:{lv:1,lbl:"良好",desc:"今の状態は良好です！定期的なサロンケアでこの美しい状態を長くキープしていきましょう🌟"},
     advice:["月1のサロンケアで今の状態をキープ✨","カラー・パーマ前後の集中ケアが特に大切","紫外線・熱ダメージ対策を日課にしよう"],
     menus:{
-      low: ["step3TR","headSpa"],                  // 健康 → 軽めのケアで維持
-      high:["systemTR","step3TR"],                 // 少し傷んでいる → 補修を
+      1:["step3TR","headSpa"],
+      2:["step3TR","headSpa","systemTR"],
+      3:["systemTR","step3TR"],
+      4:["systemTR","step3TR"],
+      5:["systemTR","step3TR"],
+      6:["systemTR"],
     },
   },
 };
@@ -878,14 +901,8 @@ function toggleDetail(id, card) {
   if (!isOpen) { el.classList.add('open'); card.classList.add('open'); }
 }
 
-function dmgHTML(d) {
-  const bars=[1,2,3,4].map(i=>`<div class="dmg-seg${i<=d.lv?' s'+d.lv:''}"></div>`).join('');
-  return `<div class="dmg-card">
-    <div class="dmg-head"><span class="dmg-lbl">現在の髪の状態</span><span class="dmg-badge d${d.lv}">${d.lbl}</span></div>
-    <div class="dmg-bars">${bars}</div>
-    <div class="dmg-scale"><span>健康</span><span>やや乾燥</span><span>ダメージ中</span><span>ダメージ大</span></div>
-    <div class="dmg-desc">${d.desc}</div></div>`;
-}
+
+
 
 // ─── MODE SELECT ───
 function selectMode(mode) {
@@ -979,40 +996,132 @@ function pick(i) {
 }
 function nextQ() {
   if(answers[cur]===undefined) return;
-  if(cur<Qs.length-1){cur++;renderQ();}
-  else{showScr('s-loading');setTimeout(()=>{renderHairResult();showScr('s-result');},2000);}
+  let next = cur + 1;
+  while (next < Qs.length && shouldSkip(next)) { answers[next] = -1; next++; }
+  if(next < Qs.length){ cur=next; renderQ(); }
+  else{ showScr('s-loading'); setTimeout(()=>{ renderHairResult(); showScr('s-result'); }, 2000); }
 }
-function prevQ(){if(cur>0){cur--;renderQ();}}
+function prevQ(){
+  let prev = cur - 1;
+  while (prev > 0 && shouldSkip(prev)) prev--;
+  if(prev >= 0){ cur=prev; renderQ(); }
+}
+
+// ─── DAMAGE LEVEL 算出 (Lv1〜6) ───
+function calcDamageLevel() {
+  // ans[0]=長さ(0=short,1=medium,2=long,3=vlong)
+  // ans[1]=カラー頻度(0=なし,1=3ヶ月,2=2ヶ月,3=1ヶ月)
+  // ans[2]=カラー歴(0=なし/<1年,1=1-2年,2=3-4年,3=5年+) ※スキップ=-1
+  // ans[3]=ブリーチ(0=なし,1=1-2回,2=3回+)
+  // ans[4]=縮毛/デジパー(0=なし,1=あり継続,2=以前)
+  // ans[5]=パーマ(0=なし,1=あり継続,2=以前)
+  const length   = answers[0] ?? 0;
+  const colorFreq= answers[1] ?? 0;
+  const colorYrs = answers[2] === -1 ? 0 : (answers[2] ?? 0);
+  const bleach   = answers[3] ?? 0;
+  const straight = answers[4] ?? 0;
+  const perm     = answers[5] ?? 0;
+
+  // ① ブリーチ3回以上 → 即Lv6
+  if (bleach === 2) return 6;
+
+  // ② カラー累積によるベースLv
+  // threshold: short=10, medium=9, long=7, vlong=7
+  const threshold = [10, 9, 7, 7][length];
+  const annualColor = [0, 4, 6, 12][colorFreq];
+  const yearMap = [0, 1.5, 3.5, 6];
+  const totalColor = annualColor * yearMap[colorYrs];
+  let lv = 1 + Math.floor(totalColor / threshold);
+
+  // ③ 縮毛矯正・デジパー → Lv3以上
+  if (straight > 0) lv = Math.max(lv, 3);
+
+  // ④ 通常パーマ → Lv3以上
+  if (perm > 0) lv = Math.max(lv, 3);
+
+  // ⑤ ブリーチ1〜2回 → Lv3以上
+  if (bleach === 1) lv = Math.max(lv, 3);
+
+  // ⑥ 還元剤＋酸化剤の重複 → Lv4以上
+  const hasReductive = straight > 0 || perm > 0;
+  const hasOxidative = colorFreq > 0 || bleach > 0;
+  if (hasReductive && hasOxidative) lv = Math.max(lv, 4);
+
+  // ⑦ ブリーチ1〜2回＋カラー → Lv5
+  if (bleach === 1 && colorFreq > 0) lv = Math.max(lv, 5);
+
+  // ⑧ 還元＋酸化＋ブリーチ三重 → Lv6
+  if (bleach >= 1 && hasReductive && hasOxidative) lv = 6;
+
+  return Math.min(lv, 6);
+}
+
+const DMG_META = {
+  1:{ lbl:"健康・バージン",  desc:"施術ダメージがほぼない状態です。この美しさをキープしながら、さらなる艶と輝きを目指しましょう！" },
+  2:{ lbl:"軽微ダメージ",    desc:"カラーの蓄積が少し始まっています。今のうちからケアを習慣にすることで、ずっとキレイな状態をキープできます。" },
+  3:{ lbl:"中程度ダメージ",  desc:"ブリーチや縮毛・パーマの影響が蓄積しています。システムトリートメントで内部から補修するタイミングです！" },
+  4:{ lbl:"ダメージあり",    desc:"還元剤と酸化剤の重複でダメージが蓄積しています。ナノスチーム追加のシステムTRで深部まで栄養を届けましょう。" },
+  5:{ lbl:"ハイダメージ",    desc:"ブリーチ＋カラーの蓄積でキューティクルが弱っています。超音波オプションで集中補修がおすすめです。" },
+  6:{ lbl:"深刻・要集中ケア",desc:"ブリーチ多回数または三重重複で、かなりのダメージが蓄積しています。まずは今日のサロンケアでしっかり補修しましょう。" },
+};
 
 function calcType() {
-  const s={dry:0,oily:0,frizzy:0,normal:0};
-  const map=[['oily','dry','frizzy','normal'],['normal','frizzy','oily','dry'],['dry','dry','normal','dry'],['oily','dry','dry','normal'],['frizzy','frizzy','frizzy','normal'],['dry','dry','frizzy','normal'],['dry','normal','dry','normal'],['normal','dry','frizzy','oily']];
-  answers.forEach((a,qi)=>{if(map[qi]?.[a])s[map[qi][a]]++;});
-  return Object.entries(s).sort((a,b)=>b[1]-a[1])[0][0];
+  // うねり→frizzy, 頭皮→oily, ダメージ→dry, それ以外→normal を ans[6](悩み)とans[7](地肌)で判定
+  const concern = answers[6] ?? 3;
+  const scalp   = answers[7] ?? 3;
+  if (concern === 1) return 'frizzy';
+  if (concern === 2 || scalp === 0) return 'oily';
+  if (concern === 0) return 'dry';
+  return 'normal';
+}
+
+// ─── Lvバー表示（6段階対応） ───
+function dmgHTML(lv) {
+  const meta = DMG_META[lv];
+  const lvColors = ['','#66BB6A','#D4E157','#FFA726','#EF6C00','#E53935','#880E4F'];
+  const bars = [1,2,3,4,5,6].map(i =>
+    `<div style="flex:1;height:8px;border-radius:4px;background:${i<=lv ? lvColors[lv] : '#EEE'};margin:0 2px;transition:background 0.3s"></div>`
+  ).join('');
+  return `<div class="dmg-card">
+    <div class="dmg-head"><span class="dmg-lbl">ダメージレベル</span><span class="dmg-badge" style="background:${lvColors[lv]}20;color:${lvColors[lv]};border:1px solid ${lvColors[lv]}40">Lv${lv}・${meta.lbl}</span></div>
+    <div style="display:flex;align-items:center;gap:2px;margin:10px 0 6px">${bars}</div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-bottom:10px"><span>健康</span><span>Lv6</span></div>
+    <div class="dmg-desc">${meta.desc}</div></div>`;
 }
 
 // ─── RENDER HAIR RESULT ───
 function renderHairResult() {
-  const r = R[calcType()];
+  const type = calcType();
+  const lv   = calcDamageLevel();
+  const r    = R[type];
 
-  // Q3(カラー頻度)・Q6(乾燥)・Q8(お悩み) からダメージスコアを算出
-  // answers[2]: 0=頻繁カラー, 1=パーマ → +1  answers[5]: 0=常にパサパサ, 1=乾燥 → +1  answers[7]: 1=パサつき → +1
-  let dmgScore = 0;
-  if (answers[2]===0 || answers[2]===1) dmgScore++;
-  if (answers[5]===0 || answers[5]===1) dmgScore++;
-  if (answers[7]===1) dmgScore++;
-  const dmgLevel = dmgScore >= 2 ? 'high' : 'low';
-  const menuKeys = r.menus[dmgLevel];
+  // うねりタイプ＆Lv1〜4 → 質感再整エステを追加
+  const hasUneUri = type === 'frizzy' || answers[6] === 1;
+  let menuKeys = [...(r.menus[lv] || r.menus[1])];
+  if (hasUneUri && lv <= 4 && !menuKeys.includes('shitsukanEste')) {
+    menuKeys.push('shitsukanEste');
+  }
 
-  document.getElementById('r-mtag').textContent='髪質診断 · Hair Diagnosis';
-  document.getElementById('r-sparkle').textContent=r.sparkle;
-  document.getElementById('r-type').textContent=r.type;
-  document.getElementById('r-sub').textContent=r.sub;
-  const menus=menuKeys.map((k,i)=>menuCardHTML(k,i===0?'おすすめ':null,false)).join('');
-  document.getElementById('r-body').innerHTML=`
-    <div><div class="r-ttl">ダメージレベル</div>${dmgHTML(r.dmg)}</div>
+  document.getElementById('r-mtag').textContent = '髪質診断 · Hair Diagnosis';
+  document.getElementById('r-sparkle').textContent = r.sparkle;
+  document.getElementById('r-type').textContent = r.type;
+  document.getElementById('r-sub').textContent = r.sub;
+
+  const menus = menuKeys.map((k,i) => menuCardHTML(k, i===0?'おすすめ':null, false)).join('');
+
+  // Lv別メッセージ
+  const lvMsg = lv >= 5
+    ? `<div class="advice-card" style="border-left:3px solid #E53935;background:#fff5f5">⚡ ダメージLv${lv}：今日のシステムTRに<strong>超音波オプション</strong>を加えると最大の補修効果が得られます。</div>`
+    : lv === 4
+    ? `<div class="advice-card" style="border-left:3px solid #EF6C00;background:#fff8f0">✦ ダメージLv4：<strong>ナノスチーム追加</strong>で成分が深部まで浸透。質感再整カラーも次回ぜひお試しください。</div>`
+    : lv === 3
+    ? `<div class="advice-card" style="border-left:3px solid #FFA726;background:#fffbf0">✦ ダメージLv3：システムTRで本格補修のタイミングです。次回カラー時に<strong>質感再整カラー</strong>もおすすめ。</div>`
+    : '';
+
+  document.getElementById('r-body').innerHTML = `
+    <div><div class="r-ttl">ダメージレベル診断</div>${dmgHTML(lv)}</div>
     <div><div class="r-ttl">髪質の特徴</div><div class="traits-wrap">${r.traits.map(t=>`<span class="trait">${t}</span>`).join('')}</div></div>
-    <div><div class="r-ttl">ホームケアアドバイス</div><div class="advice-wrap">${r.advice.map(a=>`<div class="advice-card">${a}</div>`).join('')}</div></div>
+    <div><div class="r-ttl">ホームケアアドバイス</div><div class="advice-wrap">${r.advice.map(a=>`<div class="advice-card">${a}</div>`).join('')}${lvMsg}</div></div>
     <div><div class="r-ttl">今日のメニューにおすすめ</div><div style="margin-bottom:8px;font-size:12px;color:var(--text-muted)">タップすると詳細が見られます ▾</div><div class="menu-list">${menus}</div></div>`;
 }
 
