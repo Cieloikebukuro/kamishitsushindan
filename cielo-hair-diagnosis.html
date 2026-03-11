@@ -566,25 +566,39 @@ body {
   display:flex; justify-content:center; margin-bottom:12px;
 }
 .line-cta-block {
-  background: linear-gradient(135deg, #f0faf4 0%, #e8f7f0 100%);
-  border: 1.5px solid #c2e8d0;
-  border-radius: 18px;
-  padding: 20px 20px 16px;
+  background: linear-gradient(135deg, #fff5ef 0%, #ffeee4 100%);
+  border: 1.5px solid rgba(235,96,27,0.22);
+  border-radius: 20px;
+  padding: 22px 20px 20px;
   margin-bottom: 14px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.line-cta-block::before {
+  content: '💬';
+  position: absolute;
+  top: -10px; right: -6px;
+  font-size: 52px;
+  opacity: 0.1;
+  pointer-events: none;
+}
+.line-cta-icon {
+  font-size: 26px;
+  margin-bottom: 8px;
 }
 .line-cta-title {
-  font-size: 14px;
-  font-weight: 500;
-  color: #1a6637;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--orange);
   margin-bottom: 6px;
   letter-spacing: 0.02em;
+  font-family: 'Cormorant Garamond', 'Noto Sans JP', sans-serif;
 }
 .line-cta-sub {
-  font-size: 12px;
-  color: #5a8a6a;
+  font-size: 12.5px;
+  color: var(--text-muted);
   line-height: 1.8;
-  margin-bottom: 14px;
 }
 .btn-line {
   display:inline-flex; align-items:center; justify-content:center; gap:8px;
@@ -743,14 +757,9 @@ body {
   <div class="res-body" id="r-body"></div>
   <div class="res-footer">
     <div class="line-cta-block">
-      <div class="line-cta-title">気になることはLINEでお気軽に✉️</div>
-      <div class="line-cta-sub">ご予約・メニューのご相談など、<br>いつでもお待ちしています。</div>
-      <div class="line-add-wrap">
-        <a class="btn-line" href="https://lin.ee/GYrnFWK">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.03 2 11c0 3.27 1.85 6.14 4.65 7.88-.2.73-.74 2.65-.85 3.07-.13.52.19.51.4.37.17-.11 2.17-1.47 3.05-2.07.57.08 1.16.12 1.75.12 5.52 0 10-4.03 10-9S17.52 2 12 2z"/></svg>
-          友だち追加
-        </a>
-      </div>
+      <div class="line-cta-icon">✂️</div>
+      <div class="line-cta-title">気になったメニューは、スタッフにご相談ください！</div>
+      <div class="line-cta-sub">LINEからのご相談もお気軽に 📩</div>
     </div>
     <button class="btn-restart" onclick="restart()">↺ もう一度はじめる</button>
   </div>
@@ -797,6 +806,12 @@ const M = {
     detail:"髪質改善に特化したエステメニュー。カラートリートメントとは根本的に異なる施術で、うねりや癖毛、広がりを継続的にケアしていきます。カラーなしでも受けられます。",
     points:["うねり・くせ・広がりを継続的に改善","カラーなしでも受けられる髪質改善メニュー","質感再整カラーとは根本的に異なるアプローチ"],
   },
+  chukanTR:{
+    icon:"🧴", nm:"中間処理トリートメント", dc:"今日の矯正ダメージを、施術中に抑える",
+    prices:[{l:"一律",v:"¥2,000"}], hot:true,
+    detail:"今日の縮毛矯正による髪へのダメージを抑えるために、施術の途中に行うトリートメントです。薬剤を流す前に補修成分を浸透させることで、仕上がりのサラサラ感と持ちが格段にアップします。",
+    points:["今日の矯正ダメージをその場で最小限に抑える","薬剤を流す前に補修成分を浸透させる","仕上がりのサラサラ感・ツヤ・持ちが変わる"],
+  },
 };
 
 // includes label per menu key
@@ -806,6 +821,7 @@ const INCLUDES = {
   systemTR:       "システムトリートメントを含むメニュー",
   shitsukanColor: "質感再整カラーを含むメニュー",
   shitsukanEste:  "質感再整エステを含むメニュー",
+  chukanTR:       "中間処理トリートメントを含むメニュー",
 };
 
 // ─── QUESTIONS ───
@@ -840,6 +856,11 @@ const MQs = [
   {txt:"今の髪のダメージ感はどのくらいですか？",       opts:["かなりパサつき・ゴワつきが気になる","少し傷んでいる気がする","あまりダメージは感じない","健康で問題ない"]},
   {txt:"前回のご来店からどのくらい経ちますか？",       opts:["1ヶ月以内","1〜2ヶ月","2〜3ヶ月","3ヶ月以上 / 初来店"]},
 ];
+// 縮毛矯正選択時は3問目を専用質問に変更（適正間隔: 約4ヶ月に1回）
+const MQ_STRAIGHT_INTERVAL = {
+  txt:"前回の縮毛矯正からどのくらい経ちますか？",
+  opts:["4ヶ月未満","4〜6ヶ月","6ヶ月〜1年","1年以上 / はじめて"],
+};
 
 // ─── HAIR RESULTS ───
 // menus: Lv1〜6 それぞれのおすすめキー配列
@@ -912,7 +933,7 @@ const menuData = {
   },
   color:    { label:"カラー",     sub:"色を入れた後こそ、ケアが仕上げになる。",         body:"カラー後はキューティクルが開いた状態。このタイミングにトリートメントを入れることでカラーの発色が長持ちし、艶も段違いになります。システムTRにスチームを加えると特に効果的！", keys:["systemTR","step3TR"], colorNote:true },
   perm:     { label:"パーマ",     sub:"ふんわりカールをもっと長持ちさせたい方へ。",      body:"パーマ薬剤は髪に負担がかかります。施術後にシステムTRで内部を補修すると、カールが長持ちして翌日からのスタイリングも楽になります。", keys:["systemTR","step3TR"] },
-  straight: { label:"縮毛矯正",   sub:"真っすぐな髪は、ちゃんとケアしてあげて。",       body:"矯正後はタンパク質が失われた状態です。今日こそしっかり補修のタイミング。システムTR＋超音波で深部まで栄養を届けると、サラサラが長続きします。", keys:["systemTR","step3TR"] },
+  straight: { label:"縮毛矯正",   sub:"真っすぐな髪は、ちゃんとケアしてあげて。",       body:"矯正後はタンパク質が失われた状態です。今日こそしっかり補修のタイミング。システムTR＋超音波で深部まで栄養を届けると、サラサラが長続きします。", keys:["chukanTR","systemTR","step3TR"] },
   tronly:   { label:"トリートメント", sub:"今日は髪に専念。最高のケアをお届けします。", body:"トリートメントに集中するコースです。髪の状態に合わせて3step・システムTRから最適なものをご提案します。", keys:["step3TR","systemTR"] },
 };
 
@@ -995,7 +1016,8 @@ function goMenuQuiz() {
 
 // ─── MINI QUIZ ───
 function renderMQ() {
-  const q=MQs[mqCur];
+  // 縮毛矯正選択時は3問目を専用質問に差し替え
+  const q = (mqCur === 2 && selMenu === 'straight') ? MQ_STRAIGHT_INTERVAL : MQs[mqCur];
   document.getElementById('mq-dots').innerHTML=MQs.map((_,i)=>`<div class="mq-dot ${i<mqCur?'done':i===mqCur?'active':''}"></div>`).join('');
   document.getElementById('mq-txt').textContent=q.txt;
   const c=document.getElementById('mq-opts'); c.innerHTML='';
@@ -1197,7 +1219,8 @@ function renderMenuResult() {
   if(freq===0){pIcon='🎉';pMsg='はじめてのご来店、ようこそ！まずは気軽に、髪に合ったケアをお試しください。';}
   else if(freq===3){pIcon='🙏';pMsg='いつもご利用ありがとうございます。今回は一段階アップしたケアを体感してみませんか？';}
   if(dmgFeel===0||dmgFeel===1){if(pMsg)pMsg+=' ';pIcon=pMsg?pIcon:'⚡';pMsg+='ダメージが気になる今こそ、補修ケアを入れる絶好のタイミングです！';}
-  if(interval>=2){if(pMsg)pMsg+=' ';pMsg+='お久しぶりのご来店ですので、今日はしっかりケアを入れることをおすすめします。';}
+  const intervalThreshold = selMenu === 'straight' ? 1 : 2;
+  if(interval>=intervalThreshold){if(pMsg)pMsg+=' ';pMsg+= selMenu==='straight' ? '前回の矯正から時間が経っていますので、今日は中間処理トリートメントでしっかり補修しましょう。' : 'お久しぶりのご来店ですので、今日はしっかりケアを入れることをおすすめします。';}
 
   document.getElementById('r-mtag').textContent="今日のメニュー提案 · Today's Suggestion";
   document.getElementById('r-sparkle').textContent='🎯';
