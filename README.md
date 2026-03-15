@@ -1,1 +1,3 @@
-# kamishitsushindan
+# Cielo 池袋西口
+
+髪質診断・クーポンページのソースコード管理用リポジトリ。
