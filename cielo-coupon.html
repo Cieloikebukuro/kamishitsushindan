@@ -2,330 +2,204 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cielo クーポン | 池袋西口</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hina+Mincho&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #faf7f4;
-  --white: #ffffff;
-  --orange: #EB601B;
-  --orange-light: #EBA270;
-  --orange-pale: #fdf0e8;
-  --orange-glow: rgba(235,96,27,0.10);
-  --text: #2c221a;
-  --text-muted: #9e8d7e;
-  --border: #ede5dc;
-  --border-soft: #f0e8e0;
-  --cream: #fdf9f5;
-  --gold: #c9a84c;
+  --bone: #e8e2d5;
+  --bone-deep: #ded4c1;
+  --sheet: #f4efe4;
+  --ink: #201b16;
+  --ink-2: #5b5245;
+  --faint: #a1927c;
+  --rule: #c8b99f;
+  --rule-soft: #d8ccb5;
+  --seal: #c2410c;
+  --seal-deep: #9a330a;
+  --seal-ghost: #ecdcc9;
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { -webkit-text-size-adjust:100%; }
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Noto Sans JP', sans-serif;
-  font-weight: 300;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
+  background: var(--bone);
+  color: var(--ink);
+  font-family: "Zen Kaku Gothic New", sans-serif;
+  font-weight: 400; line-height: 1.9;
+  min-height: 100vh; display: flex; justify-content: center;
+  font-feature-settings: "palt" 1;
+  word-break: auto-phrase;
+  line-break: strict;
 }
 .app {
-  width: 100%; max-width: 430px;
-  min-height: 100vh;
+  width: 100%; max-width: 430px; min-height: 100vh;
   display: flex; flex-direction: column;
-  background: var(--bg);
-  animation: fadeUp 0.45s cubic-bezier(0.22,1,0.36,1);
+  background: var(--bone); position: relative; overflow: hidden;
 }
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(16px); }
-  to   { opacity:1; transform:translateY(0); }
+.app::before {
+  content: ""; position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  opacity: 0.05; mix-blend-mode: multiply;
 }
+@keyframes drawLine { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes fadeUp6 { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
 
-/* ── brand bar ── */
+/* ── masthead ── */
 .brand-bar {
-  padding: 16px 20px 13px;
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid var(--border-soft);
-  background: var(--white);
-  position: sticky; top: 0; z-index: 10;
+  padding: 20px 26px 0; background: var(--bone);
+  position: sticky; top: 0; z-index: 20;
 }
-.brand-left { display:flex; flex-direction:column; }
-.brand-logo { display: flex; align-items: center; }
-.brand-loc { font-size: 9px; letter-spacing: 0.18em; color: var(--text-muted); margin-top: 1px; }
-.brand-tag {
-  font-size: 10px; letter-spacing: 0.14em; color: var(--text-muted);
-  background: var(--orange-pale); padding: 4px 10px; border-radius: 20px;
-  border: 1px solid var(--border);
+.brand-bar::after {
+  content: ""; display: block; height: 14px;
+  background: linear-gradient(var(--bone), rgba(232,226,213,0));
+  position: absolute; left: 0; right: 0; bottom: -14px; pointer-events: none;
 }
+.mast-row { display: flex; align-items: baseline; gap: 11px; }
+.mast-name { font-family: "Hina Mincho", serif; font-size: 22px; letter-spacing: 0.12em; color: var(--ink); line-height: 1; }
+.mast-doc { margin-left: auto; text-align: right; font-size: 10px; color: var(--faint); letter-spacing: 0.14em; line-height: 1.7; }
+.mast-rule { height: 1px; background: var(--ink); margin-top: 13px; transform-origin: left; animation: drawLine 0.55s cubic-bezier(0.7,0,0.2,1) both; }
+.mast-wave { display: block; width: 100%; height: 20px; margin-top: 2px; color: var(--rule); }
+.mast-wave path { fill: none; stroke: currentColor; stroke-width: 1; }
 
 /* ── hero ── */
-.hero {
-  padding: 28px 22px 20px;
-  background: var(--white);
-  border-bottom: 1px solid var(--border-soft);
-  position: relative; overflow: hidden;
-}
-.hero::after {
-  content:'';
-  position:absolute; bottom:-40px; right:-40px;
-  width:160px; height:160px;
-  background: radial-gradient(circle, rgba(235,96,27,0.07) 0%, transparent 70%);
-  pointer-events:none;
-}
-.hero-eyebrow {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 11px; letter-spacing: 0.22em; color: var(--orange-light);
-  margin-bottom: 8px;
-}
+.hero { padding: 34px 26px 26px; }
+.hero-eyebrow { display: none; }
 .hero-title {
-  font-size: 22px; font-weight: 400; line-height: 1.5;
-  color: var(--text); margin-bottom: 8px;
+  font-family: "Hina Mincho", serif;
+  font-size: 28px; font-weight: 400; line-height: 1.55; color: var(--ink);
+  letter-spacing: 0.02em; margin-bottom: 12px; animation: fadeUp6 0.6s 0.1s both;
 }
-.hero-title em {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic; font-size: 26px; color: var(--orange);
-}
-.hero-desc { font-size: 12px; color: var(--text-muted); line-height: 1.9; }
+.hero-title em { font-style: normal; color: inherit; }
+.hero-desc { font-size: 12.5px; color: var(--ink-2); line-height: 1.95; max-width: 30em; }
 
-/* ── filter bar ── */
-.filter-section { padding: 16px 16px 0; }
-.filter-label { font-size: 10px; letter-spacing: 0.16em; color: var(--text-muted); margin-bottom: 8px; }
-.filter-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
+/* ── filter ── */
+.filter-section { padding: 6px 26px 6px; }
+.filter-label { font-size: 10.5px; color: var(--faint); letter-spacing: 0.12em; margin-bottom: 10px; }
+.filter-chips { display: flex; flex-wrap: wrap; gap: 8px 8px; margin-bottom: 20px; }
 .chip {
-  padding: 7px 14px;
-  border: 1.5px solid var(--border);
-  border-radius: 50px;
-  font-size: 12px; color: var(--text-muted);
-  background: var(--white);
-  cursor: pointer;
-  transition: all 0.2s;
-  font-family: 'Noto Sans JP', sans-serif;
-  font-weight: 300;
+  padding: 6px 13px; border: 1px solid var(--rule); border-radius: 0;
+  font-size: 12px; color: var(--ink-2); background: transparent;
+  cursor: pointer; transition: all 0.16s ease;
+  font-family: "Zen Kaku Gothic New", sans-serif;
 }
-.chip:hover { border-color: var(--orange-light); color: var(--orange); }
-.chip.active {
-  background: var(--orange); border-color: var(--orange);
-  color: white;
-  box-shadow: 0 2px 10px rgba(235,96,27,0.22);
-}
+.chip:active { background: var(--seal-ghost); }
+@media (hover:hover){ .chip:hover { border-color: var(--seal); color: var(--seal-deep); } }
+.chip.active { background: var(--ink); border-color: var(--ink); color: var(--bone); }
 
 /* ── results count ── */
 .results-meta {
-  padding: 10px 18px 6px;
-  font-size: 11px; color: var(--text-muted);
-  display: flex; align-items: center; gap: 6px;
+  padding: 6px 26px 14px; font-size: 11px; color: var(--faint); letter-spacing: 0.06em;
+  border-top: 1px solid var(--rule);
 }
-.results-meta span { color: var(--orange); font-weight: 500; }
+.results-meta span { font-family: "Hina Mincho", serif; font-size: 15px; color: var(--seal-deep); }
 
 /* ── coupon list ── */
-.coupon-list { padding: 6px 16px 32px; display: flex; flex-direction: column; gap: 14px; }
-
-/* ── coupon card ── */
-.coupon-card {
-  background: var(--white);
-  border: 1px solid var(--border-soft);
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-  transition: transform 0.22s, box-shadow 0.22s;
-  animation: cardIn 0.35s cubic-bezier(0.22,1,0.36,1) both;
+.coupon-list { padding: 0 26px 12px; display: flex; flex-direction: column; }
+.coupon-card { background: transparent; border-bottom: 1px solid var(--rule); padding: 22px 0 20px; animation: none; }
+.coupon-card:first-child { border-top: 1px solid var(--ink); }
+.coupon-card-top { position: relative; padding-right: 0; }
+.coupon-card-top:has(.coupon-badge) { padding-right: 64px; }
+.coupon-category { font-size: 10px; letter-spacing: 0.12em; color: var(--faint); margin-bottom: 7px; }
+.coupon-name {
+  font-family: "Hina Mincho", serif;
+  font-size: 17px; color: var(--ink); line-height: 1.5; margin-bottom: 8px; letter-spacing: 0.02em;
 }
-.coupon-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
-@keyframes cardIn {
-  from { opacity:0; transform:translateY(12px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-.coupon-card-top {
-  padding: 16px 18px 14px;
-  border-bottom: 1px dashed var(--border);
-  position: relative;
-}
-.coupon-category { font-size: 10px; letter-spacing: 0.14em; color: var(--orange-light); margin-bottom: 6px; }
-.coupon-name { font-size: 15px; font-weight: 500; color: var(--text); line-height: 1.5; margin-bottom: 6px; }
-.coupon-desc { font-size: 12px; color: var(--text-muted); line-height: 1.8; }
+.coupon-desc { font-size: 12px; color: var(--ink-2); line-height: 1.9; }
 .coupon-badge {
-  position: absolute; top: 14px; right: 16px;
-  background: var(--orange-pale);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 4px 10px;
-  font-size: 10px; color: var(--orange);
-  letter-spacing: 0.06em;
+  position: absolute; top: 2px; right: 0;
+  background: transparent; border: 1px solid var(--rule); border-radius: 0;
+  padding: 2px 8px; font-size: 9.5px; color: var(--ink-2); letter-spacing: 0.06em;
 }
-.coupon-badge.hot { background: var(--orange); color: white; border-color: var(--orange); }
+.coupon-badge.hot { background: var(--seal); color: var(--bone); border-color: var(--seal); }
 
 /* ── menu elements ── */
-.menu-elements {
-  padding: 0 14px 14px;
-  border-bottom: 1px dashed var(--border);
-}
+.menu-elements { padding: 14px 0 0; }
 .menu-elements-toggle {
-  display: flex; align-items: center; gap: 8px;
-  margin: 0 0 0;
-  padding: 10px 12px;
-  cursor: pointer;
-  background: linear-gradient(135deg, var(--orange-pale) 0%, #fdf6f2 100%);
-  border: 1.5px solid rgba(235,96,27,0.18);
-  border-radius: 12px;
-  user-select: none;
-  transition: all 0.2s;
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 0; cursor: pointer; user-select: none;
+  border-top: 1px solid var(--rule-soft); border-bottom: 1px solid var(--rule-soft);
 }
-.menu-elements-toggle:hover { border-color: rgba(235,96,27,0.35); }
-.menu-elements-toggle .toggle-label {
-  flex: 1;
-  font-size: 11.5px; font-weight: 500; color: var(--orange);
-  letter-spacing: 0.06em;
-}
-.menu-elements-toggle .toggle-sub {
-  font-size: 10px; color: var(--text-muted);
-}
+.menu-elements-toggle .toggle-label { flex: 1; font-size: 11.5px; color: var(--ink); letter-spacing: 0.04em; }
+.menu-elements-toggle .toggle-sub { font-size: 10px; color: var(--faint); }
 .menu-elements-toggle .toggle-icon {
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  background: var(--orange);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; color: white;
-  transition: transform 0.25s;
-  flex-shrink: 0;
+  width: 16px; height: 16px; display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: var(--seal); transition: transform 0.25s ease; flex-shrink: 0;
 }
 .menu-elements-toggle.open .toggle-icon { transform: rotate(180deg); }
-.menu-elements-body {
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height 0.4s cubic-bezier(0.22,1,0.36,1), opacity 0.3s;
-  opacity: 0;
-}
-.menu-elements-body.open { max-height: 800px; opacity: 1; }
-.menu-element-item {
-  margin-top: 8px;
-  background: var(--white);
-  border-radius: 12px;
-  padding: 12px 14px;
-  border: 1px solid var(--border-soft);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-}
-.menu-element-header { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; flex-wrap: wrap; }
-.menu-element-name { font-size: 12.5px; font-weight: 500; color: var(--text); }
+.menu-elements-body { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.35s cubic-bezier(0.7,0,0.2,1), opacity 0.25s; }
+.menu-elements-body.open { max-height: 1400px; opacity: 1; }
+.menu-element-item { margin-top: 12px; padding-left: 14px; border-left: 1px solid var(--rule); }
+.menu-element-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
+.menu-element-name { font-family: "Hina Mincho", serif; font-size: 13px; color: var(--ink); }
 .element-badge {
-  font-size: 9px; padding: 2px 8px; border-radius: 20px;
-  border: 1px solid;
-  letter-spacing: 0.06em;
-  white-space: nowrap;
-}
-.element-badge.カラー { background: #fff3e0; color: #d4730a; border-color: #f5c791; }
-.element-badge.トリートメント { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
-.element-badge.パーマ { background: #e8eaf6; color: #3949ab; border-color: #9fa8da; }
-.element-badge.縮毛矯正 { background: #f3e5f5; color: #7b1fa2; border-color: #ce93d8; }
-.element-badge.ヘッドスパ { background: #e0f7fa; color: #00838f; border-color: #80deea; }
-.element-badge.オプション { background: #fce4ec; color: #c2185b; border-color: #f48fb1; }
-.element-badge.髪質改善トリートメント { background: #fff8e1; color: #f57f17; border-color: #ffcc02; }
-.menu-element-desc { font-size: 11.5px; color: var(--text-muted); line-height: 1.75; }
-/* こちらもおすすめ */
-.also-rec {
-  margin-top: 8px;
-  border-radius: 10px;
-  border: 1px solid rgba(235,96,27,0.22);
-  overflow: hidden;
-}
-.also-rec-toggle {
-  display: flex; align-items: center; gap: 7px;
-  padding: 8px 11px;
-  background: linear-gradient(135deg, var(--orange-pale) 0%, #fdf6f2 100%);
-  cursor: pointer;
-  user-select: none;
-}
-.also-rec-label {
-  font-size: 10px; font-weight: 500; color: var(--orange);
+  font-size: 9px; padding: 1px 7px; border-radius: 0;
+  border: 1px solid var(--rule-soft); color: var(--faint); background: transparent;
   letter-spacing: 0.06em; white-space: nowrap;
 }
-.also-rec-names {
-  font-size: 11px; font-weight: 500; color: var(--orange);
-  flex: 1; line-height: 1.5;
+.menu-element-desc { font-size: 11.5px; color: var(--ink-2); line-height: 1.85; }
+.also-rec { margin-top: 10px; }
+.also-rec-toggle {
+  display: flex; align-items: center; gap: 8px; padding: 7px 0;
+  cursor: pointer; user-select: none; border-top: 1px dashed var(--rule);
 }
-.also-rec-arrow {
-  font-size: 10px; color: var(--orange-light);
-  transition: transform 0.25s; flex-shrink: 0;
-}
+.also-rec-label { font-size: 9.5px; color: var(--seal-deep); letter-spacing: 0.08em; white-space: nowrap; }
+.also-rec-names { font-size: 11px; color: var(--seal-deep); flex: 1; line-height: 1.5; }
+.also-rec-arrow { font-size: 9px; color: var(--seal); transition: transform 0.25s ease; flex-shrink: 0; }
 .also-rec-toggle.open .also-rec-arrow { transform: rotate(180deg); }
-.also-rec-body {
-  max-height: 0; overflow: hidden;
-  transition: max-height 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.25s;
-  opacity: 0;
-  background: var(--white);
-}
-.also-rec-body.open { max-height: 400px; opacity: 1; }
-.also-rec-item {
-  padding: 10px 12px;
-  border-top: 1px solid var(--border-soft);
-}
-.also-rec-item-header {
-  display: flex; align-items: center; gap: 6px; margin-bottom: 4px;
-}
-.also-rec-item-name { font-size: 11.5px; font-weight: 500; color: var(--text); }
-.also-rec-item-desc { font-size: 11px; color: var(--text-muted); line-height: 1.7; }
+.also-rec-body { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.3s cubic-bezier(0.7,0,0.2,1), opacity 0.22s; }
+.also-rec-body.open { max-height: 700px; opacity: 1; }
+.also-rec-item { padding: 9px 0 0 12px; border-left: 1px solid var(--rule-soft); margin-top: 8px; }
+.also-rec-item-header { display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px; }
+.also-rec-item-name { font-family: "Hina Mincho", serif; font-size: 11.5px; color: var(--ink); }
+.also-rec-item-desc { font-size: 11px; color: var(--ink-2); line-height: 1.8; }
 
 /* ── coupon bottom ── */
 .coupon-card-bottom {
-  padding: 12px 18px;
-  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 16px 0 0; display: flex; align-items: flex-end;
+  justify-content: space-between; gap: 14px; flex-wrap: wrap;
 }
-.coupon-price-wrap { display: flex; align-items: baseline; gap: 8px; flex-shrink: 0; }
-.coupon-price-original { font-size: 12px; color: var(--text-muted); text-decoration: line-through; }
-.coupon-price {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 24px; font-weight: 400; color: var(--orange);
-  letter-spacing: 0.02em;
-}
-.coupon-price-unit { font-size: 12px; color: var(--text-muted); }
-.coupon-conditions { font-size: 10px; color: var(--text-muted); text-align: right; line-height: 1.7; }
+.coupon-bottom-left { display: flex; flex-direction: column; gap: 5px; }
+.coupon-price-wrap { display: flex; align-items: baseline; gap: 7px; }
+.coupon-price-original { font-size: 12px; color: var(--faint); text-decoration: line-through; }
+.coupon-price { font-family: "Hina Mincho", serif; font-size: 26px; color: var(--seal-deep); letter-spacing: 0.01em; }
+.coupon-price-unit { font-size: 10.5px; color: var(--faint); }
+.coupon-conditions { font-size: 10px; color: var(--faint); line-height: 1.7; letter-spacing: 0.02em; }
 
-/* ── reserve button ── */
+/* ── reserve ── */
 .btn-reserve {
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  background: var(--orange);
-  color: white;
-  border: none;
-  border-radius: 50px;
-  padding: 10px 20px;
-  font-size: 12px; font-weight: 500;
-  font-family: 'Noto Sans JP', sans-serif;
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.22s;
-  white-space: nowrap;
-  flex-shrink: 0;
-  box-shadow: 0 3px 12px rgba(235,96,27,0.28);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--seal); color: var(--bone); border: none; border-radius: 0;
+  padding: 11px 22px; font-size: 12.5px; font-weight: 500;
+  font-family: "Zen Kaku Gothic New", sans-serif; letter-spacing: 0.1em;
+  text-decoration: none; cursor: pointer; white-space: nowrap; flex-shrink: 0;
+  transition: background 0.16s ease;
 }
-.btn-reserve:hover {
-  background: #d45318;
-  transform: translateY(-1px);
-  box-shadow: 0 5px 18px rgba(235,96,27,0.38);
-}
-.btn-reserve svg { width: 13px; height: 13px; flex-shrink: 0; }
+.btn-reserve:active { background: var(--seal-deep); }
+@media (hover:hover){ .btn-reserve:hover { background: var(--seal-deep); } }
+.btn-reserve svg { width: 12px; height: 12px; flex-shrink: 0; }
 
-/* ── coupon bottom layout ── */
-.coupon-card-bottom {
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.coupon-bottom-left { display: flex; flex-direction: column; gap: 3px; }
-
-/* ── empty state ── */
-.empty-state {
-  text-align: center; padding: 48px 24px;
-  color: var(--text-muted); font-size: 13px; line-height: 2;
-  display: none;
-}
-.empty-icon { font-size: 32px; margin-bottom: 12px; }
+/* ── empty ── */
+.empty-state { text-align: center; padding: 48px 26px; color: var(--ink-2); font-size: 13px; line-height: 2; display: none; }
+.empty-icon { display: none; }
 
 /* ── footer ── */
 .page-footer {
-  padding: 8px 24px 40px;
-  text-align: center;
-  font-size: 11px; color: var(--text-muted); letter-spacing: 0.06em;
+  margin-top: auto; padding: 24px 26px calc(38px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--ink); font-size: 10.5px; color: var(--faint);
+  letter-spacing: 0.04em; line-height: 2;
 }
+.page-footer div:first-child { font-family: "Hina Mincho", serif; font-size: 14px; color: var(--ink-2); letter-spacing: 0.06em; }
+
+.hero-title, .coupon-name, .menu-element-name, .also-rec-item-name { text-wrap: balance; }
+.hero-desc, .coupon-desc, .menu-element-desc, .also-rec-item-desc, .toggle-label { text-wrap: pretty; }
+.coupon-price, .coupon-price-unit, .coupon-conditions, .mast-doc, .element-badge, .also-rec-label, .btn-reserve, .results-meta { word-break: keep-all; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+:focus-visible { outline: 2px solid var(--seal); outline-offset: 2px; }
 </style>
 </head>
 <body>
@@ -333,27 +207,23 @@ body {
 
   <!-- brand bar -->
   <div class="brand-bar">
-    <div class="brand-left">
-      <div class="brand-logo">
-        <svg width="72" height="18" viewBox="0 0 72 18" fill="none">
-          <text x="0" y="15" font-family="Cormorant Garamond, serif" font-size="18" font-style="italic" fill="#2c221a">Cielo</text>
-        </svg>
-      </div>
-      <div class="brand-loc">IKEBUKURO NISHIGUCHI</div>
+    <div class="mast-row">
+      <span class="mast-name">Cielo</span>
+      <span class="mast-doc">クーポン<br>池袋西口</span>
     </div>
-    <div class="brand-tag">Coupon</div>
+    <div class="mast-rule"></div>
+    <svg class="mast-wave" viewBox="0 0 390 22" preserveAspectRatio="none"><path d="M0 11 Q 24 3 48 11 T 96 11 T 144 11 T 192 11 T 240 11 T 288 11 T 336 11 T 384 11 T 432 11"/></svg>
   </div>
 
   <!-- hero -->
   <div class="hero">
-    <div class="hero-eyebrow">SPECIAL OFFER</div>
-    <div class="hero-title">あなたに合う<br><em>クーポン</em>を見つけて</div>
-    <div class="hero-desc">カテゴリーやご予算でお好みのメニューをお探しください。</div>
+    <h1 class="hero-title">今日のクーポンを、<br>さがす。</h1>
+    <div class="hero-desc">メニューやご予算でしぼりこめます。価格はすべて税込。ご予約はホットペッパービューティーへ。</div>
   </div>
 
   <!-- filter -->
   <div class="filter-section">
-    <div class="filter-label">CATEGORY</div>
+    <div class="filter-label">メニュー</div>
     <div class="filter-chips">
       <div class="chip active" data-filter="category" data-value="all">すべて</div>
       <div class="chip" data-filter="category" data-value="カット">カット</div>
@@ -363,7 +233,7 @@ body {
       <div class="chip" data-filter="category" data-value="縮毛矯正">縮毛矯正</div>
       <div class="chip" data-filter="category" data-value="ヘッドスパ">ヘッドスパ</div>
     </div>
-    <div class="filter-label">PRICE</div>
+    <div class="filter-label">ご予算</div>
     <div class="filter-chips">
       <div class="chip active" data-filter="price" data-value="all">すべて</div>
       <div class="chip" data-filter="price" data-value="5000">〜¥5,000</div>
@@ -378,13 +248,12 @@ body {
   <div class="coupon-list" id="coupon-list"></div>
 
   <div class="empty-state" id="empty-state">
-    <div class="empty-icon">🔍</div>
     該当するクーポンが見つかりませんでした。<br>条件を変えてお試しください。
   </div>
 
   <div class="page-footer">
-    <div style="margin-bottom:6px;">Cielo 池袋西口</div>
-    © 2025 Cielo Hair Salon
+    <div style="margin-bottom:8px;">Cielo ｜ 池袋西口</div>
+    髪質改善と縮毛矯正の美容室 &nbsp; &copy; 2025 Cielo Hair Salon
   </div>
 </div>
 
@@ -528,50 +397,50 @@ const MENU_ELEMENTS = {
 // クーポンデータ
 // ══════════════════════════════════════════
 const COUPONS = [
-  { id:1, category:"カット", name:"カット＋シャンプー【男女使用可】", desc:"似合わせ・再現性にこだわった技術で、日々扱いやすいスタイルをご提案。スパ・眉カット・トリートメントの追加もできます♪", price:4730, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70194" },
-  { id:2, category:"カット", name:"カット＋クイックヘッドスパ", desc:"再現性にこだわったカット（シャンプー付き）＋泥パックによる頭皮クレンジングクイックスパ。＋¥1,100でロングコースに変更可。", price:5280, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70204", elements:['クイックヘッドスパ（泥パック）'] },
-  { id:3, category:"カラー", name:"カット＋フルカラー＋システムTR", desc:"髪の保湿・高濃度保湿液を含ませた人気のシステムトリートメント。胸より下は＋¥1,100〜。", price:8800, conditions:"全員 / 指定なし", badge:"人気No.1", url:"https://saloriza.com/provider/1739/reserve/?_cp=70195", elements:['フルカラー','システムTR'] },
-  { id:4, category:"カラー", name:"カット＋イルミナorアディクシーフルカラー＋アミノ酸TR", desc:"透き通るような艶感カラー。キューティクルを傷めないダメージレスカラー。胸より下は＋¥1,100〜。", price:9350, conditions:"全員 / 指定なし", badge:"人気No.2", url:"https://saloriza.com/provider/1739/reserve/?_cp=70196", elements:['イルミナカラー','アディクシーカラー','アミノ酸TR'] },
-  { id:5, category:"カラー", name:"ダブルカラー＋フルカラー＋アミノ酸TR", desc:"カット追加の場合＋¥4,300。ブリーチは全体。オンカラーを含む。鎖骨より下は＋¥2,200〜。", price:14960, conditions:"全員 / 指定なし", badge:"人気No.3", url:"https://saloriza.com/provider/1739/reserve/?_cp=70197", elements:['ダブルカラー（ブリーチ＋カラー）','アミノ酸TR'] },
-  { id:6, category:"カラー", name:"カット＋インナーカラー＋フルカラー", desc:"人気のデザインカラー。ブリーチ1回とフルカラーのメニュー。胸くらいの長さは＋¥1,100〜。", price:12100, conditions:"全員 / 指定なし", badge:"人気No.4", url:"https://saloriza.com/provider/1739/reserve/?_cp=70198", elements:['インナーカラー','フルカラー'] },
-  { id:7, category:"カラー", name:"カット＋（全体）カラー＋アミノ酸TR", desc:"胸より下の長さは＋¥1,100〜。ブリーチベースの箇所がある場合＋¥1,100。", price:7150, conditions:"女性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70202", elements:['アミノ酸TR'] },
-  { id:8, category:"カラー", name:"【髪質改善】カット＋質感再整カラー", desc:"EAN/sを使用し、ダメージによる「空洞化」を整え芯ある硬質感を実現。フルカラー・リタッチ共通（白髪染め可）。胸下の長さは＋¥1,000。", price:10450, conditions:"全員 / 指定なし", badge:"髪質改善", url:"https://saloriza.com/provider/1739/reserve/?_cp=95991", elements:['質感再整カラー（EAN/s）'] },
-  { id:9, category:"カラー", name:"【髪質改善】カット＋質感再整カラー＋EAN/s 4step", desc:"EAN/s 4stepで効果をさらに高めます。フルカラー・リタッチ共通（白髪染め可）。胸下の長さは＋¥1,000。", price:13200, conditions:"全員 / 指定なし", badge:"髪質改善", url:"https://saloriza.com/provider/1739/reserve/?_cp=95988", elements:['質感再整カラー（EAN/s）','EAN/s 4stepトリートメント'] },
-  { id:10, category:"カラー", name:"【白髪染め】カット＋根元カラー＋クレンジングスパ", desc:"カラーは根元2cmまで。フルカラーの場合は＋¥1,100。4STEPトリートメントは＋¥2,200。", price:8800, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70212", elements:['クイックヘッドスパ（泥パック）'] },
-  { id:11, category:"カラー", name:"【白髪染め】カット＋カラー（根元）＋3stepTR", desc:"カラーは根元2cmまで。フルカラーの場合は＋¥1,100。", price:7150, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70213", elements:['3stepTR'] },
-  { id:12, category:"トリートメント", name:"【髪質改善】カット＋EAN/s質感再整エステ", desc:"クセやうねりを軽減し美しい艶を与えるトリートメント。＋¥1,500〜のトリートメント追加でさらに上質な質感に。カラー同時施術可。", price:10450, conditions:"全員 / 指定なし", badge:"髪質改善", url:"https://saloriza.com/provider/1739/reserve/?_cp=95987", elements:['EAN/s 質感再整エステ'] },
-  { id:13, category:"トリートメント", name:"【髪質改善】EAN/s質感再整エステ", desc:"クセやうねりを軽減し美しい艶を与えるトリートメント。＋¥1,500〜のトリートメント追加でさらに上質な質感に。カラー同時施術可。", price:9350, conditions:"全員 / 指定なし", badge:"髪質改善", url:"https://saloriza.com/provider/1739/reserve/?_cp=95992", elements:['EAN/s 質感再整エステ'] },
-  { id:14, category:"パーマ", name:"カット＋パーマ＋アミノ酸TR【メンズ】", desc:"ツイスト・スパイラル・特殊パーマ・ハードパーマは＋¥4,000〜。スパイラルパーマのクーポンをご利用ください。", price:7700, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70200", elements:['パーマ','アミノ酸TR'] },
-  { id:15, category:"ヘッドスパ", name:"【白髪染め】根元カラー＋クレンジングスパ", desc:"カラーは根元2cmまで。フルカラーの場合は＋¥1,100。", price:7700, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70211", elements:['クイックヘッドスパ（泥パック）'] },
-  { id:16, category:"カット", name:"【メンズ限定】カット＋クイックスパor眉カット", desc:"再現性にこだわったカット（シャンプー付き）。眉カットか泥パックによる頭皮クレンジングクイックスパが選べます。＋¥1,100でロングコースに変更可。", price:5280, conditions:"男性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70201", elements:['眉カット','クイックヘッドスパ（泥パック）'] },
-  { id:17, category:"カラー", name:"【メンズ限定】カット＋フルカラー", desc:"再現性の高いカットとオーガニック薬剤を使ったフルカラーのセット。＋¥1,100でスパコースorケアTRを選べます。", price:7700, conditions:"男性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70203", elements:['フルカラー'] },
+  { id:1, category:"カット", name:"カット＋シャンプー【男女使用可】", desc:"似合わせ・再現性にこだわった技術で、日々扱いやすいスタイルをご提案。スパ・眉カット・トリートメントの追加もできます。", price:4730, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70194" },
+  { id:2, category:"カット", name:"カット＋クイックヘッドスパ", desc:"再現性にこだわったカット（シャンプー付き）＋泥パックによる頭皮クレンジングクイックスパ。＋¥1,210でロングコースに変更可。", price:5280, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70204", elements:['クイックヘッドスパ（泥パック）'] },
+  { id:3, category:"カラー", name:"カット＋フルカラー＋システムTR", desc:"髪の保湿・高濃度保湿液を含ませた人気のシステムトリートメント。胸より下は＋¥1,210〜。", price:8800, conditions:"全員 / 指定なし", badge:"人気No.1", url:"https://saloriza.com/provider/1739/reserve/?_cp=70195", elements:['フルカラー','システムTR'] },
+  { id:4, category:"カラー", name:"カット＋イルミナorアディクシーフルカラー＋アミノ酸TR", desc:"透き通るような艶感カラー。キューティクルを傷めないダメージレスカラー。胸より下は＋¥1,210〜。", price:9350, conditions:"全員 / 指定なし", badge:"人気No.2", url:"https://saloriza.com/provider/1739/reserve/?_cp=70196", elements:['イルミナカラー','アディクシーカラー','アミノ酸TR'] },
+  { id:5, category:"カラー", name:"ダブルカラー＋フルカラー＋アミノ酸TR", desc:"カット追加の場合＋¥4,730。ブリーチは全体。オンカラーを含む。鎖骨より下は＋¥2,420〜。", price:14960, conditions:"全員 / 指定なし", badge:"人気No.3", url:"https://saloriza.com/provider/1739/reserve/?_cp=70197", elements:['ダブルカラー（ブリーチ＋カラー）','アミノ酸TR'] },
+  { id:6, category:"カラー", name:"カット＋インナーカラー＋フルカラー", desc:"人気のデザインカラー。ブリーチ1回とフルカラーのメニュー。胸くらいの長さは＋¥1,210〜。", price:12100, conditions:"全員 / 指定なし", badge:"人気No.4", url:"https://saloriza.com/provider/1739/reserve/?_cp=70198", elements:['インナーカラー','フルカラー'] },
+  { id:7, category:"カラー", name:"カット＋（全体）カラー＋アミノ酸TR", desc:"胸より下の長さは＋¥1,210〜。ブリーチベースの箇所がある場合＋¥1,210。", price:7150, conditions:"女性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70202", elements:['アミノ酸TR'] },
+  { id:8, category:"カラー", name:"【髪質改善】カット＋質感再整カラー", desc:"EAN/sを使用し、ダメージによる「空洞化」を整え芯ある硬質感を実現。フルカラー・リタッチ共通（白髪染め可）。胸下の長さは＋¥1,210。", price:10450, conditions:"全員 / 指定なし", badge:"髪質改善", url:"https://saloriza.com/provider/1739/reserve/?_cp=95991", elements:['質感再整カラー（EAN/s）'] },
+  { id:9, category:"カラー", name:"【髪質改善】カット＋質感再整カラー＋EAN/s 4step", desc:"EAN/s 4stepで効果をさらに高めます。フルカラー・リタッチ共通（白髪染め可）。胸下の長さは＋¥1,210。", price:13200, conditions:"全員 / 指定なし", badge:"髪質改善", url:"https://saloriza.com/provider/1739/reserve/?_cp=95988", elements:['質感再整カラー（EAN/s）','EAN/s 4stepトリートメント'] },
+  { id:10, category:"カラー", name:"【白髪染め】カット＋根元カラー＋クレンジングスパ", desc:"カラーは根元2cmまで。フルカラーの場合は＋¥1,210。", price:8800, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70212", elements:['クイックヘッドスパ（泥パック）'] },
+  { id:11, category:"カラー", name:"【白髪染め】カット＋カラー（根元）＋3stepTR", desc:"カラーは根元2cmまで。フルカラーの場合は＋¥1,210。", price:7150, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70213", elements:['3stepTR'] },
+  { id:12, category:"トリートメント", name:"【髪質改善】カット＋EAN/s質感再整エステ", desc:"クセやうねりを軽減し美しい艶を与えるトリートメント。＋¥1,650〜のトリートメント追加でさらに上質な質感に。カラー同時施術可。", price:10450, conditions:"全員 / 指定なし", badge:"髪質改善", url:"https://saloriza.com/provider/1739/reserve/?_cp=95987", elements:['EAN/s 質感再整エステ'] },
+  { id:13, category:"トリートメント", name:"【髪質改善】EAN/s質感再整エステ", desc:"クセやうねりを軽減し美しい艶を与えるトリートメント。＋¥1,650〜のトリートメント追加でさらに上質な質感に。カラー同時施術可。", price:9350, conditions:"全員 / 指定なし", badge:"髪質改善", url:"https://saloriza.com/provider/1739/reserve/?_cp=95992", elements:['EAN/s 質感再整エステ'] },
+  { id:14, category:"パーマ", name:"カット＋パーマ＋アミノ酸TR【メンズ】", desc:"ツイスト・スパイラル・特殊パーマ・ハードパーマは＋¥4,400〜。スパイラルパーマのクーポンをご利用ください。", price:7700, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70200", elements:['パーマ','アミノ酸TR'] },
+  { id:15, category:"ヘッドスパ", name:"【白髪染め】根元カラー＋クレンジングスパ", desc:"カラーは根元2cmまで。フルカラーの場合は＋¥1,210。", price:7700, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70211", elements:['クイックヘッドスパ（泥パック）'] },
+  { id:16, category:"カット", name:"【メンズ限定】カット＋クイックスパor眉カット", desc:"再現性にこだわったカット（シャンプー付き）。眉カットか泥パックによる頭皮クレンジングクイックスパが選べます。＋¥1,210でロングコースに変更可。", price:5280, conditions:"男性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70201", elements:['眉カット','クイックヘッドスパ（泥パック）'] },
+  { id:17, category:"カラー", name:"【メンズ限定】カット＋フルカラー", desc:"再現性の高いカットとオーガニック薬剤を使ったフルカラーのセット。＋¥1,210でスパコースorケアTRを選べます。", price:7700, conditions:"男性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70203", elements:['フルカラー'] },
   { id:18, category:"カラー", name:"【メンズ限定】カット＋カラー（全体）＋眉カット＋アミノ酸TR", desc:"白髪染めもこちらのクーポンでご利用可。オーガニック薬剤を使ったフルカラーのセット。", price:8250, conditions:"男性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70206", elements:['眉カット','アミノ酸TR'] },
-  { id:19, category:"カラー", name:"【メンズ限定】カット＋カラー（全体）＋クイックヘッドスパ", desc:"＋¥1,100でロングスパコースorダメージケアTRを選べます。", price:8250, conditions:"男性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70207", elements:['クイックヘッドスパ（泥パック）'] },
-  { id:20, category:"カラー", name:"【メンズ限定】カット＋フルカラー＋眉カット＋クイックスパ", desc:"ブリーチは＋¥4,400。＋¥1,100でロングスパコースorダメージケアTRを選べます。", price:8800, conditions:"男性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70209", elements:['フルカラー','眉カット','クイックヘッドスパ（泥パック）'] },
-  { id:21, category:"パーマ", name:"【メンズ限定】カット＋パーマ＋眉カット＋アミノ酸TR", desc:"ツイスト・スパイラル・特殊パーマ・ハードパーマは＋¥4,000〜。", price:8250, conditions:"男性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70205", elements:['パーマ','眉カット','アミノ酸TR'] },
-  { id:22, category:"パーマ", name:"【メンズ限定】カット＋パーマ＋眉カット＋クイックスパ", desc:"ツイスト・スパイラル・ハードパーマはスパイラルパーマのクーポンをご利用ください。＋¥1,100でロングスパコースorダメージケアTRを選べます。", price:8800, conditions:"男性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70210", elements:['パーマ','眉カット','クイックヘッドスパ（泥パック）'] },
-  { id:23, category:"ヘッドスパ", name:"【メンズ限定】カット＋眉カット＋クイックヘッドスパ", desc:"再現性にこだわったカット（シャンプー付き）。泥パックによる頭皮クレンジングクイックスパ。＋¥1,100でロングコースに変更可。", price:6380, conditions:"男性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70208", elements:['眉カット','クイックヘッドスパ（泥パック）'] },
-  { id:24, category:"カラー", name:"【白髪染め】カット＋カラー（根元）＋システムTR", desc:"カラーは根元2cmまで。フルカラーの場合は＋¥1,100。", price:7700, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70214", elements:['システムTR'] },
-  { id:25, category:"ヘッドスパ", name:"ヘッドスパ＋システムTR【ブロー付き】", desc:"スチームトリートメントは＋¥1,100、超音波トリートメントは＋¥2,200。", price:6050, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70215", elements:['クイックヘッドスパ（泥パック）','システムTR'] },
-  { id:26, category:"カラー", name:"イルミナorアディクシーフルカラー", desc:"透き通るような外国人風カラー。キューティクルを傷めないダメージレスカラー。胸より下は＋¥1,100〜。", price:8250, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70216", elements:['イルミナカラー','アディクシーカラー'] },
-  { id:27, category:"カラー", name:"イルミナorアディクシーフルカラー＋高保湿コーティングTR", desc:"綺麗な発色＆低ダメージのイルミナカラーのツヤ感にシステムTRをプラス。胸より下は＋¥1,100〜。", price:9900, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70217", elements:['イルミナカラー','アディクシーカラー','高保湿コーティングTR（システムTR）'] },
-  { id:28, category:"カラー", name:"カット＋イルミナorアディクシーフルカラー＋ナノスチームTR", desc:"綺麗な発色＆低ダメージのイルミナカラー＋ナノスチームTR。胸より下は＋¥1,100〜。", price:12650, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70218", elements:['イルミナカラー','アディクシーカラー','ナノスチームTR'] },
-  { id:29, category:"カラー", name:"カット＋イルミナorアディクシーフルカラー＋高保湿コーティングTR", desc:"綺麗な発色＆低ダメージのイルミナカラー＋システムTR。胸より下は＋¥1,100〜。", price:11000, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70219", elements:['イルミナカラー','アディクシーカラー','高保湿コーティングTR（システムTR）'] },
-  { id:30, category:"トリートメント", name:"カット＋システムTR", desc:"再現性の高いカット＋大人気のシステムTR。＋¥1,100でナノスチームコース、＋¥2,200で超音波TRコースに変更可。", price:6600, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70220", elements:['システムTR'] },
+  { id:19, category:"カラー", name:"【メンズ限定】カット＋カラー（全体）＋クイックヘッドスパ", desc:"＋¥1,210でロングスパコースorダメージケアTRを選べます。", price:8250, conditions:"男性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70207", elements:['クイックヘッドスパ（泥パック）'] },
+  { id:20, category:"カラー", name:"【メンズ限定】カット＋フルカラー＋眉カット＋クイックスパ", desc:"ブリーチは＋¥4,840。＋¥1,210でロングスパコースorダメージケアTRを選べます。", price:8800, conditions:"男性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70209", elements:['フルカラー','眉カット','クイックヘッドスパ（泥パック）'] },
+  { id:21, category:"パーマ", name:"【メンズ限定】カット＋パーマ＋眉カット＋アミノ酸TR", desc:"ツイスト・スパイラル・特殊パーマ・ハードパーマは＋¥4,400〜。", price:8250, conditions:"男性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70205", elements:['パーマ','眉カット','アミノ酸TR'] },
+  { id:22, category:"パーマ", name:"【メンズ限定】カット＋パーマ＋眉カット＋クイックスパ", desc:"ツイスト・スパイラル・ハードパーマはスパイラルパーマのクーポンをご利用ください。＋¥1,210でロングスパコースorダメージケアTRを選べます。", price:8800, conditions:"男性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70210", elements:['パーマ','眉カット','クイックヘッドスパ（泥パック）'] },
+  { id:23, category:"ヘッドスパ", name:"【メンズ限定】カット＋眉カット＋クイックヘッドスパ", desc:"再現性にこだわったカット（シャンプー付き）。泥パックによる頭皮クレンジングクイックスパ。＋¥1,210でロングコースに変更可。", price:6380, conditions:"男性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70208", elements:['眉カット','クイックヘッドスパ（泥パック）'] },
+  { id:24, category:"カラー", name:"【白髪染め】カット＋カラー（根元）＋システムTR", desc:"カラーは根元2cmまで。フルカラーの場合は＋¥1,210。", price:7700, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70214", elements:['システムTR'] },
+  { id:25, category:"ヘッドスパ", name:"ヘッドスパ＋システムTR【ブロー付き】", desc:"スチームトリートメントは＋¥1,210、超音波トリートメントは＋¥2,420。", price:6050, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70215", elements:['クイックヘッドスパ（泥パック）','システムTR'] },
+  { id:26, category:"カラー", name:"イルミナorアディクシーフルカラー", desc:"透き通るような外国人風カラー。キューティクルを傷めないダメージレスカラー。胸より下は＋¥1,210〜。", price:8250, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70216", elements:['イルミナカラー','アディクシーカラー'] },
+  { id:27, category:"カラー", name:"イルミナorアディクシーフルカラー＋高保湿コーティングTR", desc:"綺麗な発色＆低ダメージのイルミナカラーのツヤ感にシステムTRをプラス。胸より下は＋¥1,210〜。", price:9900, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70217", elements:['イルミナカラー','アディクシーカラー','高保湿コーティングTR（システムTR）'] },
+  { id:28, category:"カラー", name:"カット＋イルミナorアディクシーフルカラー＋ナノスチームTR", desc:"綺麗な発色＆低ダメージのイルミナカラー＋ナノスチームTR。胸より下は＋¥1,210〜。", price:12650, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70218", elements:['イルミナカラー','アディクシーカラー','ナノスチームTR'] },
+  { id:29, category:"カラー", name:"カット＋イルミナorアディクシーフルカラー＋高保湿コーティングTR", desc:"綺麗な発色＆低ダメージのイルミナカラー＋システムTR。胸より下は＋¥1,210〜。", price:11000, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70219", elements:['イルミナカラー','アディクシーカラー','高保湿コーティングTR（システムTR）'] },
+  { id:30, category:"トリートメント", name:"カット＋システムTR", desc:"再現性の高いカット＋大人気のシステムTR。＋¥1,210でナノスチームコース、＋¥2,420で超音波TRコースに変更可。", price:6600, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70220", elements:['システムTR'] },
   { id:31, category:"カラー", name:"カット＋カラー（根元）＋アミノ酸TR", desc:"カラーは根元2cmまで。白髪染めは白髪染めおすすめクーポンをご利用ください。", price:6600, conditions:"女性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70222", elements:['アミノ酸TR'] },
   { id:32, category:"カラー", name:"カット＋カラー（根元）＋システムTR", desc:"カラーは根元2cmまで。白髪染めは白髪染めクーポンをご利用ください。", price:7700, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70223", elements:['システムTR'] },
   { id:33, category:"縮毛矯正", name:"ポイント縮毛矯正＋カット", desc:"前髪のクセが気になる方必見！前髪・もみあげ・襟足などのポイント施術可。カラー・パーマ等の同日施術不可。", price:7700, conditions:"全員 / カラー・パーマ等同日不可", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70224", elements:['ポイント縮毛矯正'] },
-  { id:34, category:"縮毛矯正", name:"縮毛矯正＋CMCトリートメント", desc:"仕上がり自慢の縮毛矯正＋タンパク質CMCトリートメント。＋¥2,200〜で4stepTRに変更可。ロング料金＋¥2,200。", price:10890, conditions:"全員 / カラー・パーマ等同日不可", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70225", elements:['縮毛矯正','CMCトリートメント'] },
-  { id:35, category:"縮毛矯正", name:"カット＋縮毛矯正＋アミノ酸TR", desc:"自然な仕上がり自慢の縮毛矯正。＋¥2,200〜でケアコース・高保湿TRも。ロング料金＋¥2,200。カラー・パーマ等の同日施術不可。", price:13200, conditions:"全員 / カラー・パーマ等同日不可", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70226", elements:['縮毛矯正','アミノ酸TR'] },
-  { id:36, category:"縮毛矯正", name:"カット＋縮毛矯正＋CMC TR", desc:"サラツヤな仕上がり自慢の縮毛矯正＋CMCトリートメント。＋¥2,200〜でシステムTRに変更可。ロング料金＋¥2,200。", price:13500, conditions:"全員 / カラー・パーマ等同日不可", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70227", elements:['縮毛矯正','CMCトリートメント'] },
-  { id:37, category:"縮毛矯正", name:"カット＋プレミアム縮毛矯正＋高保湿コーティングTR", desc:"自然でサラツヤな仕上がりの縮毛矯正＋内部補修システムTR。ロング料金＋¥2,200。＋¥1,100でスチームコースに変更可。", price:16500, conditions:"全員 / カラー・パーマ等同日不可", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70228", elements:['プレミアム縮毛矯正','高保湿コーティングTR（システムTR）'] },
+  { id:34, category:"縮毛矯正", name:"縮毛矯正＋CMCトリートメント", desc:"仕上がり自慢の縮毛矯正＋タンパク質CMCトリートメント。＋¥2,420〜で4stepTRに変更可。ロング料金＋¥2,420。", price:10890, conditions:"全員 / カラー・パーマ等同日不可", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70225", elements:['縮毛矯正','CMCトリートメント'] },
+  { id:35, category:"縮毛矯正", name:"カット＋縮毛矯正＋アミノ酸TR", desc:"自然な仕上がり自慢の縮毛矯正。＋¥2,420〜でケアコース・高保湿TRも。ロング料金＋¥2,420。カラー・パーマ等の同日施術不可。", price:13200, conditions:"全員 / カラー・パーマ等同日不可", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70226", elements:['縮毛矯正','アミノ酸TR'] },
+  { id:36, category:"縮毛矯正", name:"カット＋縮毛矯正＋CMC TR", desc:"サラツヤな仕上がり自慢の縮毛矯正＋CMCトリートメント。＋¥2,420〜でシステムTRに変更可。ロング料金＋¥2,420。", price:13500, conditions:"全員 / カラー・パーマ等同日不可", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70227", elements:['縮毛矯正','CMCトリートメント'] },
+  { id:37, category:"縮毛矯正", name:"カット＋プレミアム縮毛矯正＋高保湿コーティングTR", desc:"自然でサラツヤな仕上がりの縮毛矯正＋内部補修システムTR。ロング料金＋¥2,420。＋¥1,210でスチームコースに変更可。", price:16500, conditions:"全員 / カラー・パーマ等同日不可", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70228", elements:['プレミアム縮毛矯正','高保湿コーティングTR（システムTR）'] },
   { id:38, category:"カラー", name:"リタッチカラー【白髪染め】", desc:"シャンプー・ブロー付き。", price:6050, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70229", elements:['リタッチカラー'] },
   { id:39, category:"カラー", name:"リタッチカラー", desc:"シャンプー・ブロー込。男性はフルカラー料金でのご案内になります。", price:5500, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70230", elements:['リタッチカラー'] },
-  { id:40, category:"カラー", name:"インナーカラー＋フルカラー", desc:"イヤリングカラーもOK。追加メニューでカット追加可。ブリーチ1回とフルカラーのメニュー。胸下の長さはロング料金＋¥1,100。", price:11000, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70231", elements:['インナーカラー','フルカラー'] },
-  { id:41, category:"パーマ", name:"カット＋パーマ＋アミノ酸TR【女性限定】", desc:"ロング料金なし。クリープパーマは＋¥1,650。デジタルパーマクーポンへ変更可。システムTRは＋¥2,200。", price:8800, conditions:"女性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70241", elements:['パーマ','アミノ酸TR'] },
-  { id:42, category:"パーマ", name:"カット＋デジタルパーマ＋アミノ酸TR", desc:"毎日のスタイリングが楽にコテで巻いたようなふんわり仕上がり。ロング料金なし。ダメージケアコースは＋¥2,200。カラー・縮毛矯正との同日施術不可。", price:13200, conditions:"全員 / カラー・縮毛矯正同日不可", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70242", elements:['デジタルパーマ','アミノ酸TR'] },
-  { id:43, category:"パーマ", name:"カット＋デジタルパーマ＋システムトリートメント", desc:"デジタルパーマ＋システムTRでコーティング付き。内部補修ケアコースは＋¥1,100。ロング料金なし。カラー・縮毛矯正との同日施術不可。", price:15620, conditions:"全員 / カラー・縮毛矯正同日不可", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70243", elements:['デジタルパーマ','システムTR'] },
-  { id:44, category:"カラー", name:"ケアブリーチ＋フルカラー＋アミノ酸TR", desc:"ケラチン配合のケア剤で低ダメージのブリーチ。全体カラーを含む。全体ブリーチ＋¥1,100。鎖骨より下＋¥2,200。カット追加は＋¥4,000。", price:17160, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70247", elements:['ケアブリーチ','アミノ酸TR'] },
+  { id:40, category:"カラー", name:"インナーカラー＋フルカラー", desc:"イヤリングカラーもOK。追加メニューでカット追加可。ブリーチ1回とフルカラーのメニュー。胸下の長さはロング料金＋¥1,210。", price:11000, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70231", elements:['インナーカラー','フルカラー'] },
+  { id:41, category:"パーマ", name:"カット＋パーマ＋アミノ酸TR【女性限定】", desc:"ロング料金なし。クリープパーマは＋¥2,750。デジタルパーマクーポンへ変更可。システムTRは＋¥2,420。", price:8800, conditions:"女性限定 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70241", elements:['パーマ','アミノ酸TR'] },
+  { id:42, category:"パーマ", name:"カット＋デジタルパーマ＋アミノ酸TR", desc:"毎日のスタイリングが楽にコテで巻いたようなふんわり仕上がり。ロング料金なし。ダメージケアコースは＋¥2,420。カラー・縮毛矯正との同日施術不可。", price:13200, conditions:"全員 / カラー・縮毛矯正同日不可", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70242", elements:['デジタルパーマ','アミノ酸TR'] },
+  { id:43, category:"パーマ", name:"カット＋デジタルパーマ＋システムトリートメント", desc:"デジタルパーマ＋システムTRでコーティング付き。内部補修ケアコースは＋¥1,210。ロング料金なし。カラー・縮毛矯正との同日施術不可。", price:15620, conditions:"全員 / カラー・縮毛矯正同日不可", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70243", elements:['デジタルパーマ','システムTR'] },
+  { id:44, category:"カラー", name:"ケアブリーチ＋フルカラー＋アミノ酸TR", desc:"ケラチン配合のケア剤で低ダメージのブリーチ。全体カラーを含む。全体ブリーチ＋¥1,210。鎖骨より下＋¥2,420。カット追加は＋¥4,400。", price:17160, conditions:"全員 / 指定なし", badge:"", url:"https://saloriza.com/provider/1739/reserve/?_cp=70247", elements:['ケアブリーチ','アミノ酸TR'] },
 ];
 
 let filterCategory = 'all';
@@ -625,7 +494,7 @@ function buildElementsHTML(elements) {
         <div class="also-rec">
           <div class="also-rec-toggle" onclick="toggleAlsoRec(this)">
             <span class="also-rec-label">こちらもおすすめ</span>
-            <span class="also-rec-names">${filteredUpgrades.join(' · ')}</span>
+            <span class="also-rec-names">${filteredUpgrades.join('　')}</span>
             <span class="also-rec-arrow">▾</span>
           </div>
           <div class="also-rec-body">
@@ -699,7 +568,7 @@ function renderCoupons() {
   list.innerHTML = filtered.map((c, i) => `
     <div class="coupon-card" style="animation-delay:${i * 0.05}s">
       <div class="coupon-card-top">
-        <div class="coupon-category">${c.category.toUpperCase()} · ${c.category}</div>
+        <div class="coupon-category">${c.category}</div>
         <div class="coupon-name">${c.name}</div>
         <div class="coupon-desc">${c.desc}</div>
         ${c.badge ? `<div class="coupon-badge ${badgeClass(c.badge)}">${c.badge}</div>` : ''}
@@ -711,7 +580,7 @@ function renderCoupons() {
             <div class="coupon-price">¥${c.price.toLocaleString()}</div>
             <div class="coupon-price-unit">（税込）</div>
           </div>
-          <div class="coupon-conditions">${c.conditions.replace(' / ', ' · ')}</div>
+          <div class="coupon-conditions">${c.conditions.replace(' / ', '　')}</div>
         </div>
         ${c.url ? `
         <a class="btn-reserve" href="${c.url}" target="_blank" rel="noopener">
