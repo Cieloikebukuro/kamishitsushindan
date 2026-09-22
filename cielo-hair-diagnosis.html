@@ -6,20 +6,20 @@
 <title>Cielo 髪のカルテ | 池袋西口</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hina+Mincho&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Old+Mincho:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bone: #e8e2d5;
-  --bone-deep: #ded4c1;
-  --sheet: #f4efe4;
-  --ink: #201b16;
-  --ink-2: #5b5245;
-  --faint: #a1927c;
-  --rule: #c8b99f;
-  --rule-soft: #d8ccb5;
-  --seal: #c2410c;
-  --seal-deep: #9a330a;
-  --seal-ghost: #ecdcc9;
+  --bone: #f8f4ee;
+  --bone-deep: #ece3d3;
+  --sheet: #ece3d3;
+  --ink: #2a1e15;
+  --ink-2: #5c5044;
+  --faint: #7c6a58;
+  --rule: #d8c9b4;
+  --rule-soft: #d8c9b4;
+  --seal: #eb601b;
+  --seal-deep: #b8480f;
+  --seal-ghost: color-mix(in srgb, var(--seal) 12%, var(--bone));
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html { -webkit-text-size-adjust:100%; }
@@ -63,7 +63,7 @@ body {
 }
 .mast-row { display: flex; align-items: baseline; gap: 11px; }
 .mast-name {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 22px; letter-spacing: 0.12em; color: var(--ink); line-height: 1;
 }
 .mast-doc {
@@ -88,7 +88,7 @@ body {
   margin-bottom: 20px;
 }
 .hero-title {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 30px; font-weight: 400; letter-spacing: 0.01em;
   line-height: 1.55; color: var(--ink); margin-bottom: 20px;
   animation: fadeUp6 0.6s 0.15s both;
@@ -122,12 +122,12 @@ body {
 .mc-inner { display: flex; align-items: baseline; gap: 16px; padding: 22px 4px 22px 0; }
 .mc-ico { display: none; }
 .mc-num {
-  font-family: "Hina Mincho", serif; font-size: 15px; color: var(--faint);
+  font-family: "Zen Old Mincho", serif; font-size: 15px; color: var(--faint);
   flex-shrink: 0; width: 20px;
 }
 .mc-info { flex: 1; min-width: 0; }
 .mc-ttl {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 19px; font-weight: 400; color: var(--ink); margin-bottom: 6px; line-height: 1.5;
 }
 .mc-sub { font-size: 11.5px; color: var(--ink-2); line-height: 1.8; }
@@ -137,7 +137,7 @@ body {
 .sel-header { padding: 30px 26px 6px; }
 .sel-tag { display: none; }
 .sel-title {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 21px; font-weight: 400; line-height: 1.75; color: var(--ink); padding-bottom: 22px;
 }
 .sel-body {
@@ -161,7 +161,7 @@ body {
 .msb-ico { display: none; }
 .msb-lbl {
   flex: 1;
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 17px; color: var(--ink); letter-spacing: 0.02em;
 }
 .msb-chk {
@@ -200,7 +200,7 @@ body {
 }
 .prog-label { font-size: 10.5px; letter-spacing: 0.16em; color: var(--faint); }
 .step-cnt {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 15px; color: var(--ink-2); letter-spacing: 0.06em;
 }
 .prog-wave { display: block; width: 100%; height: 34px; color: var(--ink); }
@@ -209,13 +209,13 @@ body {
 .step-dots, .mq-dots { display: none; }
 
 .q-num {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 20px; color: var(--faint); margin: 22px 0 8px; letter-spacing: 0.04em;
 }
 .q-mode, .mq-tag { font-size: 10.5px; color: var(--faint); letter-spacing: 0.1em; margin: 22px 0 8px; }
 .q-cat { display: none; }
 .q-txt, .mq-txt {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 20px; font-weight: 400; line-height: 1.75; color: var(--ink);
   padding-bottom: 22px; border-bottom: 1px solid var(--ink);
 }
@@ -277,7 +277,7 @@ body {
 .scan-wave { display: block; width: 100%; height: 60px; color: var(--ink); }
 .scan-wave path { fill: none; stroke: currentColor; stroke-width: 1.25; stroke-linecap: round; }
 .load-msg {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 22px; font-weight: 400; color: var(--ink); letter-spacing: 0.04em;
   margin: 26px 0 24px;
 }
@@ -304,7 +304,7 @@ body {
 }
 .r-sparkle { display: none; }
 .r-type {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 30px; font-weight: 400; letter-spacing: 0.01em;
   line-height: 1.45; color: var(--ink); margin-bottom: 14px;
   animation: fadeUp6 0.6s 0.1s both;
@@ -323,14 +323,14 @@ body {
 }
 .r-ttl::before {
   content: attr(data-n);
-  font-family: "Hina Mincho", serif; font-size: 13px; color: var(--seal); letter-spacing: 0;
+  font-family: "Zen Old Mincho", serif; font-size: 13px; color: var(--seal); letter-spacing: 0;
 }
 .r-ttl::after { content: none; }
 
 /* traits */
 .traits-wrap { display: flex; flex-wrap: wrap; gap: 0 18px; }
 .trait {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 15px; color: var(--ink); padding: 4px 0;
   position: relative; padding-left: 14px;
 }
@@ -354,12 +354,12 @@ body {
 .dmg-card { padding: 4px 0 0; }
 .dmg-head { display: flex; align-items: flex-end; gap: 14px; margin-bottom: 20px; }
 .dmg-figure {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 52px; line-height: 0.9; color: var(--seal); letter-spacing: 0;
 }
 .dmg-figure small { font-size: 16px; color: var(--faint); }
 .dmg-lbl {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 17px; color: var(--ink); padding-bottom: 6px;
 }
 .dmg-badge { display: none; }
@@ -382,13 +382,13 @@ body {
 .menu-head { display: flex; align-items: baseline; padding: 16px 0; gap: 14px; }
 .menu-ico { display: none; }
 .menu-nm {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 16px; color: var(--ink); margin-bottom: 3px; letter-spacing: 0.02em;
 }
 .menu-dc { font-size: 11px; color: var(--ink-2); line-height: 1.7; }
 .menu-includes { font-size: 10px; color: var(--seal-deep); margin-top: 5px; letter-spacing: 0.04em; }
 .menu-badge {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 11px; background: transparent; color: var(--seal); padding: 0;
   white-space: nowrap; letter-spacing: 0.06em;
 }
@@ -398,13 +398,13 @@ body {
 .menu-prices { border-top: 1px solid var(--rule-soft); padding: 12px 0; display: flex; flex-wrap: wrap; gap: 6px 16px; }
 .price-pill { display: flex; align-items: baseline; gap: 7px; padding: 0; background: transparent; border: none; font-size: 11px; }
 .p-l { color: var(--faint); }
-.p-v { font-family: "Hina Mincho", serif; font-size: 16px; color: var(--seal-deep); }
+.p-v { font-family: "Zen Old Mincho", serif; font-size: 16px; color: var(--seal-deep); }
 .opt-sec { border-top: 1px solid var(--rule-soft); }
 .opt-sec-ttl { padding: 10px 0 4px; font-size: 10px; letter-spacing: 0.1em; color: var(--faint); background: transparent; }
 .opt-row { display: flex; align-items: baseline; padding: 9px 0; border-top: 1px solid var(--rule-soft); gap: 12px; }
 .opt-plus { width: auto; height: auto; background: transparent; border-radius: 0; font-size: 11px; color: var(--seal); flex-shrink: 0; }
 .opt-nm { flex: 1; font-size: 12.5px; color: var(--ink); }
-.opt-pr { font-family: "Hina Mincho", serif; font-size: 15px; color: var(--seal-deep); }
+.opt-pr { font-family: "Zen Old Mincho", serif; font-size: 15px; color: var(--seal-deep); }
 .menu-detail { display: none; border-top: 1px solid var(--rule-soft); padding: 16px 0; background: transparent; }
 .menu-detail.open { display: block; }
 .menu-detail-body { font-size: 12.5px; line-height: 2; color: var(--ink); margin-bottom: 12px; }
@@ -417,7 +417,7 @@ body {
 
 .menu-advice { background: var(--seal-ghost); border: none; border-left: 1px solid var(--seal); border-radius: 0; padding: 16px 18px; }
 .ma-label { font-size: 10px; color: var(--seal-deep); letter-spacing: 0.14em; margin-bottom: 10px; }
-.ma-title { font-family: "Hina Mincho", serif; font-size: 19px; font-weight: 400; margin-bottom: 10px; color: var(--ink); line-height: 1.5; }
+.ma-title { font-family: "Zen Old Mincho", serif; font-size: 19px; font-weight: 400; margin-bottom: 10px; color: var(--ink); line-height: 1.5; }
 .ma-body { font-size: 12.5px; line-height: 2; color: var(--ink-2); }
 
 .next-visit-card { background: transparent; border: none; border-top: 1px solid var(--rule-soft); border-radius: 0; overflow: visible; }
@@ -427,7 +427,7 @@ body {
 .nv-body { padding: 0 0 12px; font-size: 12px; color: var(--ink-2); line-height: 2; }
 .nv-menu-preview { margin: 4px 0 4px; background: transparent; border: 1px solid var(--rule); border-radius: 0; padding: 12px 14px; display: flex; align-items: baseline; gap: 12px; }
 .nv-menu-ico { display: none; }
-.nv-menu-nm { font-family: "Hina Mincho", serif; font-size: 13px; color: var(--ink); margin-bottom: 2px; }
+.nv-menu-nm { font-family: "Zen Old Mincho", serif; font-size: 13px; color: var(--ink); margin-bottom: 2px; }
 .nv-menu-dc { font-size: 10.5px; color: var(--faint); }
 
 .personal-msg {
@@ -454,7 +454,7 @@ body {
 }
 .line-cta-block::before { content: none; }
 .line-cta-icon { display: none; }
-.line-cta-title { font-family: "Hina Mincho", serif; font-size: 15px; font-weight: 400; color: var(--ink); margin-bottom: 6px; line-height: 1.6; }
+.line-cta-title { font-family: "Zen Old Mincho", serif; font-size: 15px; font-weight: 400; color: var(--ink); margin-bottom: 6px; line-height: 1.6; }
 .line-cta-sub { font-size: 11.5px; color: var(--ink-2); line-height: 1.8; }
 .btn-line { display: none; }
 

@@ -6,20 +6,20 @@
 <title>Cielo | 池袋西口</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hina+Mincho&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Old+Mincho:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bone: #e8e2d5;
-  --bone-deep: #ded4c1;
-  --sheet: #f4efe4;
-  --ink: #201b16;
-  --ink-2: #5b5245;
-  --faint: #a1927c;
-  --rule: #c8b99f;
-  --rule-soft: #d8ccb5;
-  --seal: #c2410c;
-  --seal-deep: #9a330a;
-  --seal-ghost: #ecdcc9;
+  --bone: #f8f4ee;
+  --bone-deep: #ece3d3;
+  --sheet: #ece3d3;
+  --ink: #2a1e15;
+  --ink-2: #5c5044;
+  --faint: #7c6a58;
+  --rule: #d8c9b4;
+  --rule-soft: #d8c9b4;
+  --seal: #eb601b;
+  --seal-deep: #b8480f;
+  --seal-ghost: color-mix(in srgb, var(--seal) 12%, var(--bone));
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html { -webkit-text-size-adjust:100%; }
@@ -51,7 +51,7 @@ body {
 .mast { padding: 20px 26px 0; }
 .mast-row { display: flex; align-items: baseline; gap: 11px; }
 .mast-name {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 22px; letter-spacing: 0.12em; color: var(--ink); line-height: 1;
 }
 .mast-doc {
@@ -68,7 +68,7 @@ body {
 /* ── intro ── */
 .intro { padding: 42px 26px 34px; }
 .intro h1 {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 30px; font-weight: 400; line-height: 1.6; letter-spacing: 0.01em;
   color: var(--ink); animation: fadeUp6 0.6s 0.15s both;
 }
@@ -93,7 +93,7 @@ body {
 @media (hover: hover) { .row:hover::after { transform: scaleX(1); } }
 .row-top { display: flex; align-items: baseline; gap: 12px; }
 .row-name {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 20px; color: var(--ink); line-height: 1.4; letter-spacing: 0.02em;
 }
 .row-meta { margin-left: auto; font-size: 10.5px; color: var(--faint); white-space: nowrap; letter-spacing: 0.06em; }
@@ -106,7 +106,7 @@ body {
 
 /* ── footer ── */
 .foot { margin-top: auto; padding: 28px 26px calc(40px + env(safe-area-inset-bottom)); border-top: 1px solid var(--ink); }
-.foot-name { font-family: "Hina Mincho", serif; font-size: 15px; letter-spacing: 0.06em; color: var(--ink-2); }
+.foot-name { font-family: "Zen Old Mincho", serif; font-size: 15px; letter-spacing: 0.06em; color: var(--ink-2); }
 .foot-line { margin-top: 8px; font-size: 10.5px; color: var(--faint); line-height: 2; letter-spacing: 0.04em; }
 
 .intro h1, .row-name { text-wrap: balance; }

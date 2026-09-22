@@ -6,20 +6,20 @@
 <title>Cielo クーポン | 池袋西口</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hina+Mincho&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Zen+Old+Mincho:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bone: #e8e2d5;
-  --bone-deep: #ded4c1;
-  --sheet: #f4efe4;
-  --ink: #201b16;
-  --ink-2: #5b5245;
-  --faint: #a1927c;
-  --rule: #c8b99f;
-  --rule-soft: #d8ccb5;
-  --seal: #c2410c;
-  --seal-deep: #9a330a;
-  --seal-ghost: #ecdcc9;
+  --bone: #f8f4ee;
+  --bone-deep: #ece3d3;
+  --sheet: #ece3d3;
+  --ink: #2a1e15;
+  --ink-2: #5c5044;
+  --faint: #7c6a58;
+  --rule: #d8c9b4;
+  --rule-soft: #d8c9b4;
+  --seal: #eb601b;
+  --seal-deep: #b8480f;
+  --seal-ghost: color-mix(in srgb, var(--seal) 12%, var(--bone));
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html { -webkit-text-size-adjust:100%; }
@@ -57,7 +57,7 @@ body {
   position: absolute; left: 0; right: 0; bottom: -14px; pointer-events: none;
 }
 .mast-row { display: flex; align-items: baseline; gap: 11px; }
-.mast-name { font-family: "Hina Mincho", serif; font-size: 22px; letter-spacing: 0.12em; color: var(--ink); line-height: 1; }
+.mast-name { font-family: "Zen Old Mincho", serif; font-size: 22px; letter-spacing: 0.12em; color: var(--ink); line-height: 1; }
 .mast-doc { margin-left: auto; text-align: right; font-size: 10px; color: var(--faint); letter-spacing: 0.14em; line-height: 1.7; }
 .mast-rule { height: 1px; background: var(--ink); margin-top: 13px; transform-origin: left; animation: drawLine 0.55s cubic-bezier(0.7,0,0.2,1) both; }
 .mast-wave { display: block; width: 100%; height: 20px; margin-top: 2px; color: var(--rule); }
@@ -67,7 +67,7 @@ body {
 .hero { padding: 34px 26px 26px; }
 .hero-eyebrow { display: none; }
 .hero-title {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 28px; font-weight: 400; line-height: 1.55; color: var(--ink);
   letter-spacing: 0.02em; margin-bottom: 12px; animation: fadeUp6 0.6s 0.1s both;
 }
@@ -93,7 +93,7 @@ body {
   padding: 6px 26px 14px; font-size: 11px; color: var(--faint); letter-spacing: 0.06em;
   border-top: 1px solid var(--rule);
 }
-.results-meta span { font-family: "Hina Mincho", serif; font-size: 15px; color: var(--seal-deep); }
+.results-meta span { font-family: "Zen Old Mincho", serif; font-size: 15px; color: var(--seal-deep); }
 
 /* ── coupon list ── */
 .coupon-list { padding: 0 26px 12px; display: flex; flex-direction: column; }
@@ -103,7 +103,7 @@ body {
 .coupon-card-top:has(.coupon-badge) { padding-right: 64px; }
 .coupon-category { font-size: 10px; letter-spacing: 0.12em; color: var(--faint); margin-bottom: 7px; }
 .coupon-name {
-  font-family: "Hina Mincho", serif;
+  font-family: "Zen Old Mincho", serif;
   font-size: 17px; color: var(--ink); line-height: 1.5; margin-bottom: 8px; letter-spacing: 0.02em;
 }
 .coupon-desc { font-size: 12px; color: var(--ink-2); line-height: 1.9; }
@@ -132,7 +132,7 @@ body {
 .menu-elements-body.open { max-height: 1400px; opacity: 1; }
 .menu-element-item { margin-top: 12px; padding-left: 14px; border-left: 1px solid var(--rule); }
 .menu-element-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
-.menu-element-name { font-family: "Hina Mincho", serif; font-size: 13px; color: var(--ink); }
+.menu-element-name { font-family: "Zen Old Mincho", serif; font-size: 13px; color: var(--ink); }
 .element-badge {
   font-size: 9px; padding: 1px 7px; border-radius: 0;
   border: 1px solid var(--rule-soft); color: var(--faint); background: transparent;
@@ -152,7 +152,7 @@ body {
 .also-rec-body.open { max-height: 700px; opacity: 1; }
 .also-rec-item { padding: 9px 0 0 12px; border-left: 1px solid var(--rule-soft); margin-top: 8px; }
 .also-rec-item-header { display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px; }
-.also-rec-item-name { font-family: "Hina Mincho", serif; font-size: 11.5px; color: var(--ink); }
+.also-rec-item-name { font-family: "Zen Old Mincho", serif; font-size: 11.5px; color: var(--ink); }
 .also-rec-item-desc { font-size: 11px; color: var(--ink-2); line-height: 1.8; }
 
 /* ── coupon bottom ── */
@@ -163,7 +163,7 @@ body {
 .coupon-bottom-left { display: flex; flex-direction: column; gap: 5px; }
 .coupon-price-wrap { display: flex; align-items: baseline; gap: 7px; }
 .coupon-price-original { font-size: 12px; color: var(--faint); text-decoration: line-through; }
-.coupon-price { font-family: "Hina Mincho", serif; font-size: 26px; color: var(--seal-deep); letter-spacing: 0.01em; }
+.coupon-price { font-family: "Zen Old Mincho", serif; font-size: 26px; color: var(--seal-deep); letter-spacing: 0.01em; }
 .coupon-price-unit { font-size: 10.5px; color: var(--faint); }
 .coupon-conditions { font-size: 10px; color: var(--faint); line-height: 1.7; letter-spacing: 0.02em; }
 
@@ -190,7 +190,7 @@ body {
   border-top: 1px solid var(--ink); font-size: 10.5px; color: var(--faint);
   letter-spacing: 0.04em; line-height: 2;
 }
-.page-footer div:first-child { font-family: "Hina Mincho", serif; font-size: 14px; color: var(--ink-2); letter-spacing: 0.06em; }
+.page-footer div:first-child { font-family: "Zen Old Mincho", serif; font-size: 14px; color: var(--ink-2); letter-spacing: 0.06em; }
 
 .hero-title, .coupon-name, .menu-element-name, .also-rec-item-name { text-wrap: balance; }
 .hero-desc, .coupon-desc, .menu-element-desc, .also-rec-item-desc, .toggle-label { text-wrap: pretty; }
