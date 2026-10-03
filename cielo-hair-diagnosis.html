@@ -601,6 +601,34 @@ body {
   </div>
 </div>
 
+<!-- ═══ BRANCH（案③：3問のあとの分岐） ═══ -->
+<div class="screen" id="s-branch">
+  <header class="mast">
+    <div class="mast-row">
+      <span class="mast-name">Cielo</span>
+      <span class="mast-doc">髪のカルテ<br>池袋西口</span>
+    </div>
+    <div class="mast-rule"></div>
+    <svg class="mast-wave" viewBox="0 0 390 22" preserveAspectRatio="none"><path d="M0 11 Q 24 3 48 11 T 96 11 T 144 11 T 192 11 T 240 11 T 288 11 T 336 11 T 384 11 T 432 11"/></svg>
+  </header>
+  <div class="quiz-top">
+    <div class="prog-head">
+      <span class="prog-label">髪質診断カルテ</span>
+      <span class="step-cnt">3 / 8</span>
+    </div>
+    <div class="q-num">ここまでで、目安がわかります</div>
+    <div class="q-txt">残りの5問で、さらに詳しく診断しますか？</div>
+  </div>
+  <div class="quiz-opts">
+    <button class="opt-btn" onclick="branchFull()"><span class="opt-circle"></span>残り5問で、詳しく診断する</button>
+    <button class="opt-btn" onclick="branchSimple()"><span class="opt-circle"></span>今すぐ、3問の回答だけで目安を見る</button>
+    <div style="margin:14px 26px 0;font-size:11px;color:var(--faint);line-height:1.8">※3問だけの結果は「目安」です。結果の画面から、あとで残りの質問に答えることもできます。</div>
+  </div>
+  <div class="nav-row">
+    <button class="btn-back" onclick="branchBack()">戻る</button>
+  </div>
+</div>
+
 <!-- ═══ LOADING ═══ -->
 <div class="screen load-screen" id="s-loading">
   <div class="scan-wrap">
@@ -645,6 +673,7 @@ body {
 // ─── STATE ───
 let appMode=null, selMenu=null, selSub=null;
 let cur=0, answers=[];
+let pos=0, fullMode=false, isSimple=false;
 let mqCur=0, mqAnswers=[];
 
 // ─── MENU DATA ───
@@ -861,7 +890,7 @@ function toggleDetail(id, card) {
 // ─── MODE SELECT ───
 function selectMode(mode) {
   appMode = mode;
-  if (mode==='hair') { cur=0; answers=[]; showScr('s-quiz'); renderQ(); }
+  if (mode==='hair') { cur=0; pos=0; fullMode=false; isSimple=false; answers=[]; showScr('s-quiz'); renderQ(); }
   else showScr('s-menusel');
 }
 
@@ -925,11 +954,15 @@ function nextMQ() {
 function prevMQ() { if(mqCur>0){mqCur--;renderMQ();}else showScr('s-menusel'); }
 
 // ─── HAIR QUIZ ───
+// 出題順（数字は Qs の番号）。Q1・Q2・Q7 まで全員共通 → 分岐画面 → 残り5問
+const FULL_ORDER = [0,1,6,2,3,4,5,7];
+const BRANCH_AFTER = 3;   // この問数のあとに「詳しく／目安」の分岐画面を出す
+
 function renderQ() {
   const q=Qs[cur];
-  setProgress(cur, Qs.length, 'prog-path');
-  document.getElementById('step-cnt').textContent=`${cur+1} / ${Qs.length}`;
-  document.getElementById('q-num').textContent=`問 ${cur+1}`;
+  setProgress(pos, FULL_ORDER.length, 'prog-path');
+  document.getElementById('step-cnt').textContent=`${pos+1} / ${FULL_ORDER.length}`;
+  document.getElementById('q-num').textContent=`問 ${pos+1}`;
   document.getElementById('q-txt').textContent=q.txt;
   const c=document.getElementById('quiz-opts'); c.innerHTML='';
   q.opts.forEach((o,i)=>{
@@ -939,9 +972,9 @@ function renderQ() {
     b.onclick=()=>pick(i); c.appendChild(b);
   });
   const nb=document.getElementById('btn-qnext');
-  nb.textContent=cur===Qs.length-1?'結果を見る':'次へ';
+  nb.textContent=pos===FULL_ORDER.length-1?'結果を見る':'次へ';
   nb.classList.toggle('on',answers[cur]!==undefined);
-  document.getElementById('btn-qback').style.display=cur===0?'none':'';
+  document.getElementById('btn-qback').style.display=pos===0?'none':'';
 }
 function pick(i) {
   answers[cur]=i;
@@ -953,15 +986,37 @@ function pick(i) {
 }
 function nextQ() {
   if(answers[cur]===undefined) return;
-  let next = cur + 1;
-  while (next < Qs.length && shouldSkip(next)) { answers[next] = -1; next++; }
-  if(next < Qs.length){ cur=next; renderQ(); }
-  else{ showScr('s-loading'); runAnalysis(()=>{ renderHairResult(); showScr('s-result'); }); }
+  if(pos===BRANCH_AFTER-1 && !fullMode){ showScr('s-branch'); return; }
+  advance();
+}
+function advance() {
+  let next = pos + 1;
+  while (next < FULL_ORDER.length && shouldSkip(FULL_ORDER[next])) { answers[FULL_ORDER[next]] = -1; next++; }
+  if(next < FULL_ORDER.length){ pos=next; cur=FULL_ORDER[pos]; showScr('s-quiz'); renderQ(); }
+  else finishQuiz(false);
+}
+function finishQuiz(simple) {
+  isSimple = simple;
+  showScr('s-loading');
+  runAnalysis(()=>{ renderHairResult(); showScr('s-result'); });
 }
 function prevQ(){
-  let prev = cur - 1;
-  while (prev > 0 && shouldSkip(prev)) prev--;
-  if(prev >= 0){ cur=prev; renderQ(); }
+  let prev = pos - 1;
+  while (prev > 0 && shouldSkip(FULL_ORDER[prev])) prev--;
+  if(prev >= 0){
+    pos=prev; cur=FULL_ORDER[pos];
+    if(pos < BRANCH_AFTER) fullMode=false;
+    renderQ();
+  }
+}
+function branchFull()   { fullMode=true; advance(); }
+function branchSimple() { finishQuiz(true); }
+function branchBack()   { showScr('s-quiz'); renderQ(); }
+function resumeFull() {
+  fullMode=true; isSimple=false;
+  pos=BRANCH_AFTER-1; cur=FULL_ORDER[pos];
+  advance();
+  window.scrollTo(0,0);
 }
 
 // ─── DAMAGE LEVEL 算出 (Lv1〜6) ───
@@ -990,25 +1045,26 @@ function calcDamageLevel() {
   const totalColor = annualColor * yearMap[colorYrs];
   let lv = 1 + Math.floor(totalColor / threshold);
 
-  // ③ 縮毛矯正・デジパー → Lv3以上
-  if (straight > 0) lv = Math.max(lv, 3);
+  const reductiveNow  = straight === 1 || perm === 1;                       // 継続中
+  const reductivePast = !reductiveNow && (straight === 2 || perm === 2);    // 以前やめた
+  const hasOxidative  = colorFreq > 0 || bleach > 0;
 
-  // ④ 通常パーマ → Lv3以上
-  if (perm > 0) lv = Math.max(lv, 3);
+  // ③④ 縮毛矯正・デジパー／パーマ：継続中は Lv3以上、以前やめた場合は引き上げ幅を半分（Lv2以上）
+  if (straight === 1) lv = Math.max(lv, 3); else if (straight === 2) lv = Math.max(lv, 2);
+  if (perm === 1)     lv = Math.max(lv, 3); else if (perm === 2)     lv = Math.max(lv, 2);
 
   // ⑤ ブリーチ1〜2回 → Lv3以上
   if (bleach === 1) lv = Math.max(lv, 3);
 
-  // ⑥ 還元剤＋酸化剤の重複 → Lv4以上
-  const hasReductive = straight > 0 || perm > 0;
-  const hasOxidative = colorFreq > 0 || bleach > 0;
-  if (hasReductive && hasOxidative) lv = Math.max(lv, 4);
+  // ⑥ 還元剤＋酸化剤の重複：継続中は Lv4以上、以前やめた場合は Lv3以上
+  if (reductiveNow && hasOxidative) lv = Math.max(lv, 4);
+  else if (reductivePast && hasOxidative) lv = Math.max(lv, 3);
 
-  // ⑦ ブリーチ1〜2回＋カラー → Lv5
+  // ⑦ ブリーチ1〜2回＋カラー → Lv5以上
   if (bleach === 1 && colorFreq > 0) lv = Math.max(lv, 5);
 
-  // ⑧ 還元＋酸化＋ブリーチ三重 → Lv6
-  if (bleach >= 1 && hasReductive && hasOxidative) lv = 6;
+  // ⑧ ブリーチ＋還元＋酸化：継続中は Lv6、以前やめた場合は Lv5以上
+  if (bleach >= 1 && (reductiveNow || reductivePast) && hasOxidative) lv = reductiveNow ? 6 : Math.max(lv, 5);
 
   return Math.min(lv, 6);
 }
@@ -1022,14 +1078,45 @@ const DMG_META = {
   6:{ lbl:"深刻・要集中ケア",desc:"ブリーチの回数、または複数施術の重複で、かなりのダメージが蓄積しています。まずは今日のサロンケアでしっかり補修します。" },
 };
 
-function calcType() {
-  // うねり→frizzy, 頭皮→oily, ダメージ→dry, それ以外→normal を ans[6](悩み)とans[7](地肌)で判定
+// ─── 複雑版：毛髪軸 × 地肌軸（3×3）───
+// Q7(悩み)→毛髪軸、Q8(地肌)＋Q7「頭皮のべたつき」→地肌軸
+const HAIR_AXIS = {
+  dry:  { lbl:"乾燥寄り",             short:"乾燥毛",   base:"dry" },
+  wavy: { lbl:"うねり寄り",           short:"うねり毛", base:"frizzy" },
+  gloss:{ lbl:"ツヤ重視（バランス型）", short:"ツヤ重視", base:"normal" },
+};
+const SCALP_AXIS = {
+  oily:  { lbl:"オイリー寄り", short:"オイリー地肌",
+           traits:R.oily.traits, advice:[R.oily.advice[0], R.oily.advice[1]] },
+  dry:   { lbl:"乾燥寄り",     short:"乾燥地肌",
+           traits:["乾燥","かゆみ","つっぱり感"],
+           advice:["洗浄力のやさしいシャンプーに替えてみるのもひとつの方法です","シャンプーはぬるま湯で、指の腹でやさしく洗いましょう"] },
+  normal:{ lbl:"ノーマル",     short:"ノーマル地肌", traits:[], advice:[] },
+};
+function calcAxes() {
   const concern = answers[6] ?? 3;
-  const scalp   = answers[7] ?? 3;
-  if (concern === 1) return 'frizzy';
-  if (concern === 2 || scalp === 0) return 'oily';
-  if (concern === 0) return 'dry';
-  return 'normal';
+  const scalpAns = answers[7] ?? 3;
+  let hair = concern === 0 ? 'dry' : concern === 1 ? 'wavy' : 'gloss';
+  if (scalpAns === 2 && hair === 'gloss') hair = 'dry';   // ゴワゴワ・指通りが悪い → 乾燥寄り
+  const scalp = (concern === 2 || scalpAns === 0) ? 'oily' : scalpAns === 1 ? 'dry' : 'normal';
+  return { hair, scalp };
+}
+
+// ─── 簡易版（3問で離脱）：Q1・Q2・Q7 のみの加点式 ───
+const SIMPLE_DMG = [
+  { lbl:"軽度の目安", desc:"カラーの頻度から見ると、今のところ大きな負担は少なそうです。今のうちにケアを習慣にすると、良い状態を保ちやすくなります。" },
+  { lbl:"中度の目安", desc:"カラーの蓄積が、少しずつ出てくる頃です。早めにケアを入れておくと安心です。" },
+  { lbl:"重度の目安", desc:"カラーの頻度と髪の長さから、毛先を中心に負担がたまりやすい状態と考えられます。まずはサロンでのケアがおすすめです。" },
+];
+const SIMPLE_MENUS = [['headSpa'], ['step3TR'], ['systemTR']];
+function calcSimpleType() {
+  const c = answers[6] ?? 3;
+  return c === 0 ? 'dry' : c === 1 ? 'frizzy' : c === 2 ? 'oily' : 'normal';
+}
+function calcSimpleDamage() {
+  // 0=軽度 1=中度 2=重度（カラー頻度 0〜3点 ＋ ロング以上 1点。合計0〜1/2〜3/4）
+  const pt = (answers[1] ?? 0) + ((answers[0] ?? 0) >= 2 ? 1 : 0);
+  return pt >= 4 ? 2 : pt >= 2 ? 1 : 0;
 }
 
 // ─── Lvバー表示（6段階対応） ───
@@ -1048,26 +1135,69 @@ function dmgHTML(lv) {
 }
 
 // ─── RENDER HAIR RESULT ───
+function dmgSimpleHTML(d) {
+  const m = SIMPLE_DMG[d];
+  const ticks = [0,1,2].map(i => `<span class="tick" style="left:${i/2*100}%"></span>`).join('');
+  const p = d/2*100;
+  return `<div class="dmg-card">
+    <div class="dmg-head"><span class="dmg-lbl">${m.lbl}</span></div>
+    <div class="dmg-axis"><span class="base"></span>${ticks}<span class="mark" data-pos="${p}" style="left:0%"></span></div>
+    <div class="dmg-scale"><span>軽度</span><span>重度</span></div>
+    <div class="dmg-desc">${m.desc}</div></div>`;
+}
+
 function renderHairResult() {
-  const type = calcType();
-  const lv   = calcDamageLevel();
+  if (isSimple) renderSimpleResult(); else renderFullResult();
+  requestAnimationFrame(()=>document.querySelectorAll('#r-body .dmg-axis .mark').forEach(m=>m.style.left=m.dataset.pos+'%'));
+}
+
+// 簡易版（3問）：結果は「目安」と明示し、残りの質問へ戻れる
+function renderSimpleResult() {
+  const type = calcSimpleType();
+  const d    = calcSimpleDamage();
   const r    = R[type];
+  let keys = [...SIMPLE_MENUS[d]];
+  if (type === 'oily' && !keys.includes('headSpa')) keys.unshift('headSpa');
+  if (type === 'frizzy') keys.push('shitsukanEste');
 
-  // うねりタイプ＆Lv1〜4 → 質感再整エステを追加
-  const hasUneUri = type === 'frizzy' || answers[6] === 1;
-  let menuKeys = [...(r.menus[lv] || r.menus[1])];
-  if (hasUneUri && lv <= 4 && !menuKeys.includes('shitsukanEste')) {
-    menuKeys.push('shitsukanEste');
-  }
-
-  document.getElementById('r-mtag').textContent = '髪質診断カルテ';
+  document.getElementById('r-mtag').textContent = '髪質診断カルテ（目安）';
   document.getElementById('r-sparkle').textContent = r.sparkle;
   document.getElementById('r-type').textContent = r.type;
   document.getElementById('r-sub').textContent = r.sub;
 
-  const menus = menuKeys.map((k,i) => menuCardHTML(k, i===0?'おすすめ':null, false)).join('');
+  const menus = keys.map((k,i) => menuCardHTML(k, i===0?'おすすめ':null, false)).join('');
+  document.getElementById('r-body').innerHTML = `
+    <div class="advice-card" style="border-left:2px solid var(--seal);background:var(--seal-ghost);padding-left:14px;padding-right:14px">今回は3問の回答だけでの<strong>目安</strong>です。残りの質問にもお答えいただくと、施術の履歴や地肌の状態まで含めて、より詳しくご提案できます。</div>
+    <div><div class="r-ttl" data-n="01">ダメージの目安</div>${dmgSimpleHTML(d)}</div>
+    <div><div class="r-ttl" data-n="02">髪質の特徴</div><div class="traits-wrap">${r.traits.map(t=>`<span class="trait">${t}</span>`).join('')}</div></div>
+    <div><div class="r-ttl" data-n="03">ホームケア</div><div class="advice-wrap">${r.advice.map(a=>`<div class="advice-card">${a}</div>`).join('')}</div></div>
+    <div><div class="r-ttl" data-n="04">今日のおすすめ</div><div style="margin-bottom:12px;font-size:11px;color:var(--faint);letter-spacing:0.04em">項目をタップすると詳細がひらきます<br>価格はホットペッパービューティー掲載の目安です</div><div class="menu-list">${menus}</div></div>
+    <div><button class="btn-restart" style="width:100%" onclick="resumeFull()">残りの質問に答えて、詳しく診断する</button></div>`;
+}
 
-  // Lv別メッセージ
+// 複雑版（8問）：毛髪軸 × 地肌軸 ＋ ダメージLv1〜6
+function renderFullResult() {
+  const { hair, scalp } = calcAxes();
+  const lv = calcDamageLevel();
+  const H = HAIR_AXIS[hair], S = SCALP_AXIS[scalp], r = R[H.base];
+
+  let keys = [...(r.menus[lv] || r.menus[1])];
+  // 地肌がオイリー寄り → ヘッドスパを先頭に
+  if (scalp === 'oily') { keys = keys.filter(k => k !== 'headSpa'); keys.unshift('headSpa'); }
+  // ツヤ重視×ノーマル地肌で傷みが軽い → 提案は絞る
+  if (hair === 'gloss' && scalp === 'normal' && lv <= 2) keys = ['step3TR'];
+  // うねり寄り × Lv4以下 → 質感再整エステを追加
+  if (hair === 'wavy' && lv <= 4 && !keys.includes('shitsukanEste')) keys.push('shitsukanEste');
+
+  document.getElementById('r-mtag').textContent = '髪質診断カルテ';
+  document.getElementById('r-sparkle').textContent = r.sparkle;
+  document.getElementById('r-type').textContent = `${H.short} × ${S.short}`;
+  document.getElementById('r-sub').textContent = r.sub;
+
+  const menus = keys.map((k,i) => menuCardHTML(k, i===0?'おすすめ':null, false)).join('');
+  const traits = [...r.traits, ...S.traits];
+  const advice = [...r.advice, ...S.advice];
+
   const lvMsg = lv >= 5
     ? `<div class="advice-card" style="border-left:2px solid var(--seal);background:var(--seal-ghost)">ダメージLv${lv}：今日のシステムTRに<strong>超音波オプション</strong>を加えると最大の補修効果が得られます。</div>`
     : lv === 4
@@ -1076,12 +1206,31 @@ function renderHairResult() {
     ? `<div class="advice-card" style="border-left:2px solid var(--seal);background:var(--seal-ghost)">ダメージLv3：システムTRで本格補修のタイミングです。次回カラー時に<strong>質感再整カラー</strong>もおすすめ。</div>`
     : '';
 
+  // カラーをしていてLv3以上 → 次回カラーの案内枠（質感再整カラー）
+  let nextVisitBlock = '';
+  if (lv >= 3 && (answers[1] ?? 0) > 0) {
+    const nm = M['shitsukanColor'];
+    nextVisitBlock = `
+    <div>
+      <div class="r-ttl" data-n="06">次回のご提案</div>
+      <div class="next-visit-card">
+        <div class="nv-header"><div class="nv-tag">次回カラーのときに</div></div>
+        <div class="nv-body">カラー剤にEAN/sを混ぜて施術する髪質改善「質感再整カラー」は、カラーメニュー専用のオプションです。タイミングによって当日の変更が難しい場合がほとんどのため、<strong>次回のカラーご予約の際にスタッフにお声がけください。</strong></div>
+        <div class="nv-menu-preview">
+          <div class="nv-menu-ico">${nm.icon}</div>
+          <div><div class="nv-menu-nm">${nm.nm}</div><div class="nv-menu-dc">${nm.dc}</div></div>
+        </div>
+      </div>
+    </div>`;
+  }
+
   document.getElementById('r-body').innerHTML = `
-    <div><div class="r-ttl" data-n="01">ダメージレベル</div>${dmgHTML(lv)}</div>
-    <div><div class="r-ttl" data-n="02">髪質の特徴</div><div class="traits-wrap">${r.traits.map(t=>`<span class="trait">${t}</span>`).join('')}</div></div>
-    <div><div class="r-ttl" data-n="03">ホームケア</div><div class="advice-wrap">${r.advice.map(a=>`<div class="advice-card">${a}</div>`).join('')}${lvMsg}</div></div>
-    <div><div class="r-ttl" data-n="04">今日のおすすめ</div><div style="margin-bottom:12px;font-size:11px;color:var(--faint);letter-spacing:0.04em">項目をタップすると詳細がひらきます<br>価格はホットペッパービューティー掲載の目安です</div><div class="menu-list">${menus}</div></div>`;
-  requestAnimationFrame(()=>document.querySelectorAll('#r-body .dmg-axis .mark').forEach(m=>m.style.left=m.dataset.pos+'%'));
+    <div><div class="r-ttl" data-n="01">毛髪 × 地肌</div><div class="traits-wrap"><span class="trait">毛髪：${H.lbl}</span><span class="trait">地肌：${S.lbl}</span></div></div>
+    <div><div class="r-ttl" data-n="02">ダメージレベル</div>${dmgHTML(lv)}</div>
+    <div><div class="r-ttl" data-n="03">髪質の特徴</div><div class="traits-wrap">${traits.map(t=>`<span class="trait">${t}</span>`).join('')}</div></div>
+    <div><div class="r-ttl" data-n="04">ホームケア</div><div class="advice-wrap">${advice.map(a=>`<div class="advice-card">${a}</div>`).join('')}${lvMsg}</div></div>
+    <div><div class="r-ttl" data-n="05">今日のおすすめ</div><div style="margin-bottom:12px;font-size:11px;color:var(--faint);letter-spacing:0.04em">項目をタップすると詳細がひらきます<br>価格はホットペッパービューティー掲載の目安です</div><div class="menu-list">${menus}</div></div>
+    ${nextVisitBlock}`;
 }
 
 // ─── RENDER MENU RESULT ───
@@ -1175,7 +1324,7 @@ function renderMenuResult() {
 
 // ─── RESTART ───
 function restart() {
-  appMode=null;selMenu=null;selSub=null;cur=0;answers=[];mqCur=0;mqAnswers=[];
+  appMode=null;selMenu=null;selSub=null;cur=0;answers=[];pos=0;fullMode=false;isSimple=false;mqCur=0;mqAnswers=[];
   allMenus.forEach(k=>document.getElementById('msb-'+k).classList.remove('sel'));
   const sc=document.getElementById('sub-cut');if(sc)sc.classList.remove('open');
   ['shampoo','spa','tr'].forEach(s=>{document.getElementById('sopt-'+s).classList.remove('sel');document.getElementById('sdot-'+s).textContent='';});
